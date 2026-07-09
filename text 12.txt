@@ -1,0 +1,1371 @@
+-- [[ Blox Fruits Rainbow Menu - Ban Offline v6.3 - 800+ Du Lieu + AI Fuzzy Match + Song Ngu VN/EN ]] --
+
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+local SoundService = game:GetService("SoundService")
+
+local LocalPlayer = Players.LocalPlayer
+math.randomseed(tick())
+
+-- currentLang: "vn" or "en". Auto-detected each message, but can be locked
+-- with an explicit command like "english please" / "noi tieng anh".
+local currentLang = "vn"
+
+local MyScriptCore = {
+    AutoFarmLevel = function(state)
+        if state == true then print("Auto Farm: BAT") else print("Auto Farm: TAT") end
+    end,
+    TeleportSea3 = function() print("Dang bay sang Sea 3...") end,
+    BringMob = function() print("Dang gom quai...") end
+}
+
+local OldMenu = CoreGui:FindFirstChild("Gemini_Offline_Core") or LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("Gemini_Offline_Core")
+if OldMenu then OldMenu:Destroy() end
+
+local CoreMenu = Instance.new("ScreenGui")
+CoreMenu.Name = "Gemini_Offline_Core"
+CoreMenu.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local success, err = pcall(function() CoreMenu.Parent = CoreGui end)
+if not success then CoreMenu.Parent = LocalPlayer:WaitForChild("PlayerGui") end
+
+local BaseHolder = Instance.new("Frame")
+local FinalSize = UDim2.new(0, 550, 0, 430)
+BaseHolder.Name = "BaseHolder"
+BaseHolder.Size = UDim2.new(0, 0, 0, 0)
+BaseHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
+BaseHolder.AnchorPoint = Vector2.new(0.5, 0.5)
+BaseHolder.BackgroundTransparency = 1
+BaseHolder.Active = true
+BaseHolder.Parent = CoreMenu
+
+local MainContainer = Instance.new("Frame")
+MainContainer.Size = UDim2.new(1, 0, 1, 0)
+MainContainer.BackgroundColor3 = Color3.fromRGB(8, 8, 12)
+MainContainer.BorderSizePixel = 0
+MainContainer.ZIndex = 2
+MainContainer.Parent = BaseHolder
+local ContainerCorner = Instance.new("UICorner") ContainerCorner.CornerRadius = UDim.new(0, 14) ContainerCorner.Parent = MainContainer
+
+local RainbowInlay = Instance.new("Frame")
+RainbowInlay.Size = UDim2.new(1, -6, 1, -6)
+RainbowInlay.Position = UDim2.new(0.5, 0, 0.5, 0)
+RainbowInlay.AnchorPoint = Vector2.new(0.5, 0.5)
+RainbowInlay.ZIndex = 3
+RainbowInlay.Parent = MainContainer
+local InlayCorner = Instance.new("UICorner") InlayCorner.CornerRadius = UDim.new(0, 12) InlayCorner.Parent = RainbowInlay
+
+local RainbowGradient = Instance.new("UIGradient")
+RainbowGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 255, 150)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 180, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 150))
+}
+RainbowGradient.Parent = RainbowInlay
+
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, -4, 1, -4)
+ContentFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+ContentFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(14, 14, 20)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.ZIndex = 4
+ContentFrame.ClipsDescendants = true
+ContentFrame.Parent = RainbowInlay
+local ContentCorner = Instance.new("UICorner") ContentCorner.CornerRadius = UDim.new(0, 10) ContentCorner.Parent = ContentFrame
+
+local function playClickSound()
+    local Sound = Instance.new("Sound") Sound.SoundId = "rbxasset://sounds/action_click.mp3" Sound.Volume = 0.5 Sound.Parent = SoundService Sound:Play() Sound.Ended:Connect(function() Sound:Destroy() end)
+end
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(0, 400, 0, 40)
+Title.Position = UDim2.new(0, 20, 0, 10)
+Title.Text = "GEMINI OFFLINE CORE v6.3"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 15
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.BackgroundTransparency = 1
+Title.ZIndex = 5
+Title.Parent = ContentFrame
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 26, 0, 26)
+CloseButton.Position = UDim2.new(1, -35, 0, 15)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 80, 80)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.BackgroundColor3 = Color3.fromRGB(24, 24, 30)
+CloseButton.ZIndex = 5
+CloseButton.Parent = ContentFrame
+local CBCorner = Instance.new("UICorner") CBCorner.CornerRadius = UDim.new(0, 6) CBCorner.Parent = CloseButton
+
+local TabBar = Instance.new("Frame")
+TabBar.Size = UDim2.new(1, -40, 0, 35)
+TabBar.Position = UDim2.new(0, 20, 0, 55)
+TabBar.BackgroundTransparency = 1
+TabBar.ZIndex = 5
+TabBar.Parent = ContentFrame
+
+local CheatPage = Instance.new("Frame")
+CheatPage.Size = UDim2.new(1, -40, 1, -110)
+CheatPage.Position = UDim2.new(0, 20, 0, 100)
+CheatPage.BackgroundTransparency = 1
+CheatPage.ZIndex = 5
+CheatPage.Parent = ContentFrame
+
+local GeminiPage = Instance.new("Frame")
+GeminiPage.Size = UDim2.new(1, -40, 1, -110)
+GeminiPage.Position = UDim2.new(0, 20, 0, 100)
+GeminiPage.BackgroundTransparency = 1
+GeminiPage.Visible = false
+GeminiPage.ZIndex = 5
+GeminiPage.Parent = ContentFrame
+
+local function createTabButton(text, pos, targetPage)
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(0, 140, 1, 0)
+    Btn.Position = pos
+    Btn.Text = text
+    Btn.Font = Enum.Font.GothamBold
+    Btn.TextSize = 13
+    Btn.TextColor3 = Color3.fromRGB(140, 140, 145)
+    Btn.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+    Btn.ZIndex = 6
+    Btn.Parent = TabBar
+    local TBC = Instance.new("UICorner") TBC.CornerRadius = UDim.new(0, 6) TBC.Parent = Btn
+
+    Btn.MouseButton1Click:Connect(function()
+        playClickSound()
+        CheatPage.Visible = false
+        GeminiPage.Visible = false
+        for _, child in ipairs(TabBar:GetChildren()) do
+            if child:IsA("TextButton") then child.TextColor3 = Color3.fromRGB(140, 140, 145) end
+        end
+        Btn.TextColor3 = Color3.fromRGB(0, 255, 150)
+        targetPage.Visible = true
+    end)
+    return Btn
+end
+
+local Tab1 = createTabButton("Chuc Nang", UDim2.new(0, 0, 0, 0), CheatPage)
+local Tab2 = createTabButton("Gemini Smart Chat", UDim2.new(0, 150, 0, 0), GeminiPage)
+Tab1.TextColor3 = Color3.fromRGB(0, 255, 150)
+
+local function createToggle(text, position, callback)
+    local isActive = false
+    local ToggleBG = Instance.new("Frame")
+    ToggleBG.Size = UDim2.new(0, 230, 0, 40)
+    ToggleBG.Position = position
+    ToggleBG.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+    ToggleBG.ZIndex = 6
+    ToggleBG.Parent = CheatPage
+    local TBC = Instance.new("UICorner") TBC.CornerRadius = UDim.new(0, 6) TBC.Parent = ToggleBG
+
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.new(1, -60, 1, 0)
+    Label.Position = UDim2.new(0, 12, 0, 0)
+    Label.Text = text
+    Label.Font = Enum.Font.GothamBold
+    Label.TextSize = 13
+    Label.TextColor3 = Color3.fromRGB(200, 200, 205)
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.BackgroundTransparency = 1
+    Label.ZIndex = 7
+    Label.Parent = ToggleBG
+
+    local StatusIndicator = Instance.new("TextButton")
+    StatusIndicator.Size = UDim2.new(0, 45, 0, 24)
+    StatusIndicator.Position = UDim2.new(1, -55, 0.5, -12)
+    StatusIndicator.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    StatusIndicator.Text = "OFF"
+    StatusIndicator.Font = Enum.Font.GothamBold
+    StatusIndicator.TextSize = 10
+    StatusIndicator.TextColor3 = Color3.fromRGB(150, 150, 155)
+    StatusIndicator.ZIndex = 7
+    StatusIndicator.Parent = ToggleBG
+    local SIC = Instance.new("UICorner") SIC.CornerRadius = UDim.new(0, 12) SIC.Parent = StatusIndicator
+
+    StatusIndicator.MouseButton1Click:Connect(function()
+        playClickSound()
+        isActive = not isActive
+        if isActive then
+            StatusIndicator.BackgroundColor3 = Color3.fromRGB(0, 200, 120)
+            StatusIndicator.TextColor3 = Color3.fromRGB(255, 255, 255)
+            StatusIndicator.Text = "ON"
+        else
+            StatusIndicator.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+            StatusIndicator.TextColor3 = Color3.fromRGB(150, 150, 155)
+            StatusIndicator.Text = "OFF"
+        end
+        task.spawn(callback, isActive)
+    end)
+end
+
+local function createActionButton(text, position, callback)
+    local MainBtn = Instance.new("TextButton")
+    MainBtn.Size = UDim2.new(0, 230, 0, 40)
+    MainBtn.Position = position
+    MainBtn.BackgroundColor3 = Color3.fromRGB(32, 32, 40)
+    MainBtn.Text = text
+    MainBtn.Font = Enum.Font.GothamBold
+    MainBtn.TextSize = 13
+    MainBtn.TextColor3 = Color3.fromRGB(230, 230, 235)
+    MainBtn.ZIndex = 6
+    MainBtn.Parent = CheatPage
+    local MBC = Instance.new("UICorner") MBC.CornerRadius = UDim.new(0, 6) MBC.Parent = MainBtn
+    MainBtn.MouseButton1Click:Connect(function() playClickSound() task.spawn(callback) end)
+end
+
+createToggle("Auto Farm Level", UDim2.new(0, 10, 0, 15), MyScriptCore.AutoFarmLevel)
+createActionButton("Teleport Sea 3", UDim2.new(0, 260, 0, 15), MyScriptCore.TeleportSea3)
+createActionButton("Gom Quai (Bring Mob)", UDim2.new(0, 10, 0, 65), MyScriptCore.BringMob)
+
+local ChatLog = Instance.new("ScrollingFrame")
+ChatLog.Size = UDim2.new(1, 0, 1, -50)
+ChatLog.BackgroundTransparency = 0.98
+ChatLog.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ChatLog.ScrollBarThickness = 4
+ChatLog.CanvasSize = UDim2.new(0, 0, 0, 0)
+ChatLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ChatLog.ZIndex = 6
+ChatLog.Parent = GeminiPage
+
+local LogLayout = Instance.new("UIListLayout") LogLayout.Padding = UDim.new(0, 10) LogLayout.SortOrder = Enum.SortOrder.LayoutOrder LogLayout.Parent = ChatLog
+
+local InputBox = Instance.new("TextBox")
+InputBox.Size = UDim2.new(1, -75, 0, 36)
+InputBox.Position = UDim2.new(0, 0, 1, -36)
+InputBox.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+InputBox.Text = ""
+InputBox.PlaceholderText = "VN/EN: hoi ve trai, boss... | ask about fruits, bosses..."
+InputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+InputBox.TextSize = 13
+InputBox.Font = Enum.Font.Gotham
+InputBox.TextXAlignment = Enum.TextXAlignment.Left
+InputBox.ClearTextOnFocus = false
+InputBox.ZIndex = 6
+InputBox.Parent = GeminiPage
+Instance.new("UIPadding", InputBox).PaddingLeft = UDim.new(0, 12)
+local IBC = Instance.new("UICorner") IBC.CornerRadius = UDim.new(0, 6) IBC.Parent = InputBox
+
+local SendBtn = Instance.new("TextButton")
+SendBtn.Size = UDim2.new(0, 65, 0, 36)
+SendBtn.Position = UDim2.new(1, -65, 1, -36)
+SendBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 120)
+SendBtn.Text = "Gui"
+SendBtn.Font = Enum.Font.GothamBold
+SendBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+SendBtn.ZIndex = 6
+SendBtn.Parent = GeminiPage
+local SBC = Instance.new("UICorner") SBC.CornerRadius = UDim.new(0, 6) SBC.Parent = SendBtn
+
+local function addMessage(senderName, text, color)
+    local MsgFrame = Instance.new("Frame")
+    MsgFrame.Size = UDim2.new(1, -10, 0, 0)
+    MsgFrame.AutomaticSize = Enum.AutomaticSize.Y
+    MsgFrame.BackgroundTransparency = 0.88
+    MsgFrame.BackgroundColor3 = color
+    MsgFrame.ZIndex = 7
+    MsgFrame.Parent = ChatLog
+
+    local MFC = Instance.new("UICorner") MFC.CornerRadius = UDim.new(0, 6) MFC.Parent = MsgFrame
+    local Pad = Instance.new("UIPadding") Pad.PaddingTop = UDim.new(0, 8) Pad.PaddingBottom = UDim.new(0, 8) Pad.PaddingLeft = UDim.new(0, 10) Pad.PaddingRight = UDim.new(0, 10) Pad.Parent = MsgFrame
+
+    local Content = Instance.new("TextLabel")
+    Content.Size = UDim2.new(1, 0, 1, 0)
+    Content.Text = "<b>" .. senderName .. ":</b> " .. text
+    Content.TextColor3 = Color3.fromRGB(240, 240, 245)
+    Content.TextSize = 13
+    Content.Font = Enum.Font.Gotham
+    Content.TextWrapped = true
+    Content.RichText = true
+    Content.BackgroundTransparency = 1
+    Content.TextXAlignment = Enum.TextXAlignment.Left
+    Content.ZIndex = 8
+    Content.Parent = MsgFrame
+
+    task.defer(function() ChatLog.CanvasPosition = Vector2.new(0, ChatLog.AbsoluteCanvasSize.Y) end)
+    return MsgFrame
+end
+
+addMessage("He Thong", "Da kich hoat che do Offline Sieu Toc ban v6.3 voi hon 800 to hop du lieu Blox Fruits + ho tro Song Ngu (VN/EN). Ban co the go tieng Viet hoac tieng Anh, minh se tu nhan biet! You can chat in Vietnamese or English, I auto-detect the language. 🥳", Color3.fromRGB(0, 200, 120))
+
+------------------------------------------------------------------------------
+-- VIETNAMESE TEXT NORMALIZATION
+------------------------------------------------------------------------------
+
+local VN_MAP = {
+    ["à"]="a",["á"]="a",["ả"]="a",["ã"]="a",["ạ"]="a",["ă"]="a",["ằ"]="a",["ắ"]="a",["ẳ"]="a",["ẵ"]="a",["ặ"]="a",
+    ["â"]="a",["ầ"]="a",["ấ"]="a",["ẩ"]="a",["ẫ"]="a",["ậ"]="a",
+    ["è"]="e",["é"]="e",["ẻ"]="e",["ẽ"]="e",["ẹ"]="e",["ê"]="e",["ề"]="e",["ế"]="e",["ể"]="e",["ễ"]="e",["ệ"]="e",
+    ["ì"]="i",["í"]="i",["ỉ"]="i",["ĩ"]="i",["ị"]="i",
+    ["ò"]="o",["ó"]="o",["ỏ"]="o",["õ"]="o",["ọ"]="o",["ô"]="o",["ồ"]="o",["ố"]="o",["ổ"]="o",["ỗ"]="o",["ộ"]="o",
+    ["ơ"]="o",["ờ"]="o",["ớ"]="o",["ở"]="o",["ỡ"]="o",["ợ"]="o",
+    ["ù"]="u",["ú"]="u",["ủ"]="u",["ũ"]="u",["ụ"]="u",["ư"]="u",["ừ"]="u",["ứ"]="u",["ử"]="u",["ữ"]="u",["ự"]="u",
+    ["ỳ"]="y",["ý"]="y",["ỷ"]="y",["ỹ"]="y",["ỵ"]="y",
+    ["đ"]="d",
+}
+-- Bang teencode / viet tat thong dung, giup hieu duoc cach nhan tin "cao cap" hon
+-- (khong dau, viet tat, tieng long) thay vi chi khop nguyen van
+local SLANG_MAP = {
+    ["ko"]="khong", ["k"]="khong", ["kg"]="khong", ["hok"]="khong", ["hong"]="khong",
+    ["hem"]="khong", ["khum"]="khong", ["kh"]="khong",
+    ["dc"]="duoc", ["dk"]="duoc",
+    ["vs"]="voi", ["z"]="vay", ["j"]="gi", ["jz"]="gi vay", ["sao"]="the nao",
+    ["ntn"]="nhu the nao", ["nt"]="nhu the", ["ns"]="noi",
+    ["bt"]="binh thuong", ["bth"]="binh thuong",
+    ["cx"]="cung", ["cug"]="cung",
+    ["r"]="roi", ["rui"]="roi",
+    ["mik"]="minh", ["mk"]="minh",
+    ["b"]="ban", ["ny"]="ban",
+    ["tks"]="cam on", ["thx"]="cam on", ["thank"]="cam on",
+    ["ok"]="duoc roi", ["oke"]="duoc roi", ["okla"]="duoc roi",
+    ["plz"]="lam on", ["pls"]="lam on",
+    ["fr"]="trai", ["fruit"]="trai",
+    ["op"]="manh", ["broken"]="manh", ["banh"]="manh", ["dinh"]="manh",
+    ["cui"]="yeu", ["te"]="yeu", ["gay"]="yeu",
+    ["nch"]="noi chung", ["ncc"]="noi chung",
+}
+local function applySlang(text)
+    local words = {}
+    for w in string.gmatch(text, "%S+") do
+        words[#words+1] = SLANG_MAP[w] or w
+    end
+    return table.concat(words, " ")
+end
+
+-- Kiem tra xem chuoi co dau tieng Viet (co dau) khong, dung de tu dong
+-- nhan biet ngon ngu nguoi dung dang go.
+local function hasVietnameseDiacritics(str)
+    local lower = string.lower(str)
+    for _, codepoint in utf8.codes(lower) do
+        local ch = utf8.char(codepoint)
+        if VN_MAP[ch] then return true end
+    end
+    return false
+end
+
+local function normalize(str)
+    str = string.lower(str)
+    local out = {}
+    for _, codepoint in utf8.codes(str) do
+        local ch = utf8.char(codepoint)
+        out[#out+1] = VN_MAP[ch] or ch
+    end
+    return applySlang(table.concat(out))
+end
+
+------------------------------------------------------------------------------
+-- LANGUAGE DETECTION (VN <-> EN)
+------------------------------------------------------------------------------
+
+-- Tu khoa tieng Anh pho bien de nhan dien khi cau khong co dau tieng Viet.
+local EN_HINT_WORDS = {
+    "the","what","which","how","where","when","who","why","strong","weak","best","good",
+    "worth","fruit","sword","weapon","boss","style","list","compare","versus","tier",
+    "awaken","awakening","farm","grind","get","find","buy","counter","weakness","build",
+    "pair","combo","is","are","does","can","should","island","map","location","reward",
+    "drop","code","please","thanks","thank"
+}
+
+local function looksEnglish(rawLowerNoAccentText)
+    local hits = 0
+    for _, w in ipairs(EN_HINT_WORDS) do
+        if string.find(rawLowerNoAccentText, "%f[%a]"..w.."%f[%A]") then
+            hits = hits + 1
+        end
+    end
+    return hits > 0
+end
+
+-- Cau lenh tuong minh de khoa ngon ngu tra loi, du dang go tieng gi.
+local function checkExplicitLangSwitch(rawText)
+    local low = string.lower(rawText)
+    if string.find(low, "tieng anh", 1, true) or string.find(low, "noi tieng anh", 1, true)
+        or string.find(low, "speak english", 1, true) or string.find(low, "in english", 1, true)
+        or string.find(low, "english please", 1, true) or string.find(low, "reply in english", 1, true) then
+        return "en"
+    end
+    if string.find(low, "tieng viet", 1, true) or string.find(low, "noi tieng viet", 1, true)
+        or string.find(low, "speak vietnamese", 1, true) or string.find(low, "in vietnamese", 1, true) then
+        return "vn"
+    end
+    return nil
+end
+
+-- Quyet dinh ngon ngu tra loi cho luot chat hien tai. rawText la ban goc
+-- (chua go dau), noAccentText la ban da bo dau (dung cho phat hien tu khoa Anh).
+local function detectLanguage(rawText, noAccentText)
+    local explicit = checkExplicitLangSwitch(rawText)
+    if explicit then
+        currentLang = explicit
+        return currentLang, true
+    end
+    if hasVietnameseDiacritics(rawText) then
+        currentLang = "vn"
+    elseif looksEnglish(noAccentText) then
+        currentLang = "en"
+    end
+    -- Neu khong co tin hieu ro rang, giu nguyen ngon ngu cua luot truoc.
+    return currentLang, false
+end
+
+------------------------------------------------------------------------------
+-- HELPERS
+------------------------------------------------------------------------------
+
+local function splitPipe(s)
+    local t = {}
+    for part in string.gmatch(s, "([^|]+)") do t[#t+1] = part end
+    return t
+end
+
+local function tokenize(text)
+    local words = {}
+    for w in string.gmatch(text, "[%a%d]+") do
+        if #w >= 2 then words[#words+1] = w end
+    end
+    return words
+end
+
+local function anyMatch(text, keywords)
+    for _, kw in ipairs(keywords) do
+        if string.find(text, kw, 1, true) then return true end
+    end
+    return false
+end
+
+local function countMatches(text, keywords)
+    local c = 0
+    for _, kw in ipairs(keywords) do
+        if string.find(text, kw, 1, true) then c = c + 1 end
+    end
+    return c
+end
+
+local function levenshtein(a, b)
+    local la, lb = #a, #b
+    if la == 0 then return lb end
+    if lb == 0 then return la end
+    local prev = {}
+    for j = 0, lb do prev[j] = j end
+    for i = 1, la do
+        local cur = {[0] = i}
+        local ca = string.byte(a, i)
+        for j = 1, lb do
+            local cost = (string.byte(b, j) == ca) and 0 or 1
+            cur[j] = math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + cost)
+        end
+        prev = cur
+    end
+    return prev[lb]
+end
+
+local EMOJI = {
+    hype  = {"🥳","😁"},
+    funny = {"🤣"},
+    cute  = {"🥹","🥰"},
+    love  = {"🥰","😁"},
+    sad   = {"😭"},
+    neutral = {"😁","🥹"},
+}
+local function emo(mood)
+    local pool = EMOJI[mood] or EMOJI.neutral
+    return pool[math.random(1, #pool)]
+end
+local function tierMood(tier)
+    if string.find(tier, "S") then return "hype" end
+    if tier == "F" or tier == "D" then return "sad" end
+    return "cute"
+end
+
+-- Nhan tier/kind/role (thuong da o dang ngan gon nhu "PvP","PvE","Beast")
+-- sang nhan tieng Anh de hien thi trong cau tra loi tieng Anh.
+local KIND_EN = {
+    ["Beast"]="Beast", ["Natural"]="Natural", ["Elemental"]="Elemental",
+    ["Paramecia"]="Paramecia",
+}
+local ROLE_EN = {
+    ["ca PvP lan PvE"] = "both PvP and PvE",
+    ["PvE (farm)"] = "PvE (farming)",
+    ["PvE (cay cap)"] = "PvE (leveling)",
+    ["PvE (san quai bien)"] = "PvE (hunting sea beasts)",
+    ["PvE (phong thu)"] = "PvE (tanking)",
+    ["PvP"] = "PvP",
+    ["PvP (rui ro cao, phan thuong cao)"] = "PvP (high risk, high reward)",
+    ["PvP (gay roi)"] = "PvP (crowd control)",
+    ["di chuyen nhanh"] = "fast travel",
+    ["di chuyen"] = "traveling",
+    ["can chien voi kiem"] = "sword melee",
+    ["cheo va kho chiu trong PvP"] = "sneaky and annoying in PvP",
+    ["ho tro dong doi"] = "supporting teammates",
+}
+local function roleEn(role)
+    return ROLE_EN[role] or role
+end
+
+------------------------------------------------------------------------------
+-- DATA: each row now ends with an English note (note_en) as the last field
+------------------------------------------------------------------------------
+
+local FRUITS_RAW = {
+    {"dragon","Dragon (Dong/Tay)","Beast","S/SS","ca PvP lan PvE","Co dong cuc cao, sat thuong dien rong, mot trong nhung trai dat va manh nhat game.","dragon|rong",
+        "Very high mobility with wide-area damage; one of the rarest and strongest fruits in the game."},
+    {"kitsune","Kitsune","Beast","S","ca PvP lan PvE","Bien hinh nhanh, combo AoE manh, rat duoc ua chuong de san boss lan bounty hunt, tong sat thuong combo thuoc top dau game.","kitsune",
+        "Fast transformation with strong AoE combos; a favorite for boss hunting and bounty hunting, with top-tier combo damage."},
+    {"leopard","Leopard","Beast","S","PvE (farm)","Bien hinh cuc nhanh nhat game, combo AoE rong, cuc manh de cay quai va farm sat thuong don muc tieu.","leopard|bao",
+        "The fastest transformation in the game with wide AoE combos, excellent for grinding mobs and single-target farming."},
+    {"mammoth","Mammoth","Beast","S","ca PvP lan PvE","Melee manh, khong che dien rong, mot trong cac trai toan dien nhat.","mammoth|voi ma mut",
+        "Strong melee with wide-area crowd control, one of the most well-rounded fruits overall."},
+    {"buddha","Buddha","Beast","A/S","PvE (cay cap)","Vua cay cap nho tam danh sieu rong khi hoa khong lo va giam sat thuong chiu vao, rat de dung cho nguoi moi, gan nhu bat buoc de farm raid.","buddha|phat to",
+        "The king of leveling thanks to its giant form's huge hitbox and damage reduction; beginner friendly and nearly essential for farming raids."},
+    {"dough","Dough","Natural","A/S","PvP","Sau khi thuc tinh (Dough V2), combo khong che cuc manh, la noi am anh trong PvP neu bat duoc stun dau tien.","dough|banh my|banh mi",
+        "After awakening (Dough V2) it has terrifying crowd-control combos, a real nightmare in PvP if it lands the first stun."},
+    {"portal","Portal","Natural","S/SS","PvP","Dich chuyen tuc thoi giup ne don va mo combo cuc nhanh, hien dang dung dau meta PvP nho combo ca van sat thuong.","portal|cong khong gian",
+        "Instant teleportation lets it dodge and open combos very fast; currently tops the PvP meta thanks to its combo and damage."},
+    {"venom","Venom","Natural","A","ca PvP lan PvE","Sat thuong doc theo thoi gian rat kho chiu, manh trong khong gian hep, kho doi pho khi bi dinh combo lien tuc.","venom|doc",
+        "Nasty damage-over-time poison, strong in tight spaces, hard to deal with once you're caught in a continuous combo."},
+    {"trex","T-Rex","Beast","A","ca PvP lan PvE","Can chien manh, sat thuong cao, la lua chon thay the tot cho Kitsune.","t-rex|trex|khung long",
+        "Strong melee with high damage, a solid alternative pick to Kitsune."},
+    {"magma","Magma","Elemental","A","PvE (san quai bien)","Sat thuong cao khi thuc tinh, hien la trai gay sat thuong cao nhat cho viec san quai bien nguy hiem.","magma|dung nham",
+        "High damage once awakened, currently the top damage dealer for hunting dangerous sea beasts."},
+    {"gas","Gas","Elemental","B","PvP","Khong che dien rong nhung kho dung, cong dong van tranh cai ve do manh thuc te vi don kho trung nguoi choi gioi.","gas|khi doc",
+        "Wide-area crowd control but hard to land; players still debate its real strength since skilled opponents can dodge it."},
+    {"tiger","Tiger","Beast","S","ca PvP lan PvE","Duoc lam lai (thay the vi tri cua Leopard cu) va manh hon han ban goc, nam trong nhom trai top hien tai.","tiger|ho",
+        "A rework that replaced the old Leopard, much stronger than the original and currently in the top tier group."},
+    {"yeti","Yeti","Beast","S","ca PvP lan PvE","Can chien bang gia manh, con co bien the hiem Fiend manh hon nua.","yeti|nguoi tuyet",
+        "Strong ice melee, and it has an even stronger rare variant called Fiend."},
+    {"lightning","Lightning","Elemental","S","PvP","Truoc day ten la Rumble (doi ten khi lam lai). Toc do tan cong va co dong cao, co stun dien rong, gay ap luc lien tuc len doi thu.","lightning|set|sam set|rumble",
+        "Formerly named Rumble before its rework. High attack speed and mobility with wide-area stun, keeps constant pressure on opponents."},
+    {"control","Control","Paramecia","A","PvP","Khong che manh, duoc ua chuong du doi hoi ky nang cao de land don.","control|dieu khien",
+        "Strong crowd control, popular despite requiring high skill to land hits."},
+    {"quake","Quake","Paramecia","A","ca PvP lan PvE","Day lui dien rong, gom quai va hit nhieu muc tieu tot de cay cap.","quake|dong dat",
+        "Wide-area knockback, good at gathering mobs and hitting multiple targets for leveling."},
+    {"string","String","Paramecia","A","PvP","Keo dai combo tot, ho tro tot cho loi danh can chien kieu extender.","string|day",
+        "Great combo extension, supports melee 'extender' style playstyles well."},
+    {"creation","Creation","Paramecia","A","ca PvP lan PvE","Ban lam lai cua Barrier, on dinh trong giao tranh va co kha nang phong thu tot.","creation|tao vat|barrier",
+        "A rework of Barrier, stable in fights with good defensive capability."},
+    {"spirit","Spirit","Elemental","S","ca PvP lan PvE","Sat thuong cao, combo linh hoat, de ket hop voi fighting style can chien.","spirit|linh khi",
+        "High damage, flexible combos, pairs well with melee fighting styles."},
+    {"sound","Sound","Elemental","S","PvP","Co dong va ap luc tot trong cac tran PvP nho toc do ra don nhanh.","sound|am thanh",
+        "Good mobility and pressure in PvP thanks to its fast move speed."},
+    {"ice","Ice","Elemental","B","ca PvP lan PvE","Sat thuong on, co ky nang truot bang giup di chuyen nhanh, de dung cho nguoi moi.","ice|bang",
+        "Decent damage, has an ice-slide skill for fast movement, beginner friendly."},
+    {"light","Light","Elemental","B","di chuyen nhanh","Bay nhanh nhat game, rat tot cho First Sea va di chuyen duong dai, co mien nhiem nguyen to voi NPC yeu.","light|anh sang",
+        "Fastest flight in the game, great for First Sea and long travel, gives elemental immunity against weaker NPCs."},
+    {"phoenix","Phoenix","Elemental","B","PvE","Tu hoi mau, do ben cao, giup giam thoi gian chet khi cay.","phoenix|phuong hoang",
+        "Self heals with high durability, reduces downtime while grinding."},
+    {"blizzard","Blizzard","Elemental","B","PvP","Khong che dong bang dien rong kha tot trong combo.","blizzard|bao tuyet",
+        "Wide-area freeze crowd control, quite good inside combos."},
+    {"spider","Spider","Natural","B","PvP","Ky nang bay, combo tot khi dung dung cach de bat bai doi thu.","spider|nhen",
+        "Has a flight skill, good combo potential when used correctly to catch opponents off guard."},
+    {"soul","Soul","Natural","A","PvP","Combo kho doan, thuong duoc dung lam trai phu de pha the doi thu.","soul|linh hon",
+        "Unpredictable combos, often used as a secondary fruit to break an opponent's stance."},
+    {"shadow","Shadow","Natural","B","ca PvP lan PvE","Co dong tot, phu hop loi choi theo nhom va ne don.","shadow|bong toi",
+        "Good mobility, suits team-based play and dodging."},
+    {"gravity","Gravity","Natural","B","PvP","Khong che keo va khoa muc tieu kha tot, hay dung de lock combo.","gravity|trong luc",
+        "Decent pull and lock crowd control, often used to lock down combos."},
+    {"rubber","Rubber","Natural","D","PvP","Yeu ve sat thuong, kha de bi bat bai trong PvP hien tai so voi cac trai moi.","rubber|cao su",
+        "Weak on damage, fairly easy to be countered in the current PvP meta compared to newer fruits."},
+    {"sand","Sand","Natural","D","PvE","Tung manh nhung da bi giam suc manh, hien kha yeu so voi mat bang chung.","sand|cat",
+        "Used to be strong but got nerfed, now fairly weak compared to the overall power level."},
+    {"spike","Spike","Natural","F","PvE","Sat thuong rat thap, chu yeu de choi cho vui hoac hoai niem.","spike|gai",
+        "Very low damage, mostly used for fun or nostalgia."},
+    {"chop","Chop","Natural","F","PvE","Chi hieu qua khi doi dau nguoi dung kiem, con lai kha yeu.","chop|chem",
+        "Only effective against sword users, otherwise fairly weak."},
+    {"bomb","Bomb","Natural","D","PvE","Sat thuong thap, it duoc dung o giai doan cuoi game.","bomb|bom",
+        "Low damage, rarely used in the late game."},
+    {"spin","Spin","Natural","F","PvE","Gan nhu khong con hieu qua o thoi diem hien tai.","spin|xoay",
+        "Practically ineffective at this point in the game."},
+    {"rocket","Rocket","Natural","F","di chuyen","Chu yeu dung de bay nhanh giai doan dau, sat thuong rat thap.","rocket|ten lua",
+        "Mainly used for fast early-game flight, very low damage."},
+    {"spring","Spring","Natural","F","di chuyen","Ho tro nhay cao, gan nhu khong co gia tri chien dau.","spring|lo xo",
+        "Helps with high jumps, has almost no combat value."},
+    {"dark","Dark","Elemental","B","PvE","Tung manh nhung loi choi da hoi loi thoi so voi cac trai moi hon.","dark|bong den",
+        "Used to be strong but its playstyle feels a bit outdated compared to newer fruits."},
+    {"flame","Flame","Elemental","B","PvE","Sat thuong on cho giai doan dau va giua game, de tiep can.","flame|lua",
+        "Decent damage for the early-to-mid game, easy to access."},
+    {"eagle","Eagle","Beast","C/B","di chuyen + PvE","Truoc day ten la Falcon, duoc lam lai va doi ten vao Update 26 (4/2025) voi chieu thuc moi va long vu no, gio co dong va huu ich hon han ban goc.","eagle|chim ung|falcon",
+        "Formerly named Falcon, reworked and renamed in Update 26 (April 2025) with new moves and exploding feathers, now much more mobile and useful than the original."},
+    {"fiend","Fiend","Beast","S","ca PvP lan PvE","Bien the hiem cua Yeti (ra mat dau 2026), suc manh vao top S ngay khi ra mat va kho so huu hon trai thuong.","fiend",
+        "A rare variant of Yeti (released early 2026), landed in the top S tier on release and is much harder to obtain than the regular fruit."},
+    {"diamond","Diamond","Elemental","B","PvE (phong thu)","Phong thu cuc cao nho giap kim cuong, sat thuong vua phai, phu hop loi choi tank chiu don. Cung la trai ma boss Diamond su dung.","diamond|kim cuong",
+        "Very high defense thanks to diamond armor, moderate damage, suits a tanky playstyle. It's also the fruit used by the Diamond boss."},
+    {"smoke","Smoke","Elemental","B","ca PvP lan PvE","Ky nang gay choang va che khuat tam nhin, ho tro combo mo dau kha tot. Co the bay (toc do cham).","smoke|khoi",
+        "Has stun skills and vision-blocking, quite good for opening combos. Can fly, though slowly."},
+    {"pain","Pain","Natural","A","PvP (rui ro cao, phan thuong cao)","Truoc day ten la Paw (doi ten vi ly do ban quyen). Co co che hoi sinh dac biet 'Last Stand' khi het mau, bien thanh dang buff toan dien tam thoi nhung khoa vu khi khac trong luc do.","pain|paw",
+        "Formerly named Paw (renamed for copyright reasons). Has a special 'Last Stand' revive mechanic when out of health, turning into a temporary all-round buffed form but locking other weapons during it."},
+    {"love","Love","Natural","B","PvP (gay roi)","Ky nang gay me/roi loan doi thu (Cupid's Zone, Heart Shot...), mang tinh ho tro va khong che nhieu hon la sat thuong thuan.","love|tinh yeu",
+        "Skills that charm/confuse opponents (Cupid's Zone, Heart Shot...), more about support and crowd control than raw damage."},
+    {"ghost","Ghost","Natural","B","cheo va kho chiu trong PvP","Co the tang hinh tam thoi va choang doi thu bang hieu ung so hai, kho bi phat hien khi mo dau combo.","ghost|ma",
+        "Can turn temporarily invisible and stun opponents with a fear effect, hard to spot when opening a combo."},
+    {"revive","Revive","Natural","B","ho tro dong doi","Ho tro hoi sinh dong doi da nga trong mot so che do choi theo doi, mang tinh utility hon la sat thuong.","revive|hoi sinh",
+        "Supports reviving fallen teammates in certain team modes, more of a utility fruit than a damage dealer."},
+    {"blade","Blade","Natural","A","can chien voi kiem","Trieu hoi luoi kiem bay xung quanh nguoi choi, sat thuong tot khi ket hop build kiem.","blade|luoi kiem",
+        "Summons flying blades around the player, good damage when combined with a sword build."},
+}
+
+local ISLANDS_RAW = {
+    {"pirate_starter","Dao Cuop Bien (Xuat Phat)","Sea 1","Noi bat dau hanh trinh phe cuop bien, co NPC day ky nang co ban.","dao cuop bien|xuat phat cuop bien",
+        "Where the Pirate faction journey begins, has NPCs that teach basic skills."},
+    {"marine_starter","Dao Hai Quan (Xuat Phat)","Sea 1","Noi bat dau hanh trinh phe hai quan, phu hop lam nhiem vu som.","dao hai quan xuat phat",
+        "Where the Marine faction journey begins, good for early quests."},
+    {"middle_town","Thi Tran Trung Tam","Sea 1","Co Blox Fruit Dealer ban trai ac quy, la diem giao dich quan trong.","middle town|thi tran trung tam",
+        "Home to the Blox Fruit Dealer who sells devil fruits, an important trading hub."},
+    {"jungle","Rung Ram","Sea 1","Co quai vua suc de cay cap thap giai doan dau.","jungle|rung ram",
+        "Has moderate-strength mobs, good for low-level early grinding."},
+    {"pirate_village","Lang Cuop Bien","Sea 1","Khu vuc cay cap va lam nhiem vu dau game.","pirate village|lang cuop bien",
+        "An early-game area for grinding and quests."},
+    {"desert","Sa Mac","Sea 1","Dia hinh rong, thich hop cay quai tam trung dau game.","desert|sa mac",
+        "Wide terrain, suitable for grinding mid-strength mobs early on."},
+    {"frozen_village","Lang Bang","Sea 1","Khu vuc bang gia voi quai phu hop cap do dau-giua game.","frozen village|lang bang",
+        "An icy area with mobs suited to early-to-mid game levels."},
+    {"marine_fortress","Phao Dai Hai Quan","Sea 1","Can cu hai quan voi nhieu linh canh gac.","marine fortress|phao dai hai quan",
+        "A Marine base guarded by many soldiers."},
+    {"skylands","Dao Troi","Sea 1","Khu vuc tren khong, can ky nang bay hoac trai ho tro di chuyen.","skylands|dao troi",
+        "An airborne area, requires flight skills or a mobility fruit to reach."},
+    {"prison","Nha Tu","Sea 1","Noi giam giu tu nhan, co chuoi nhiem vu lien quan cot truyen.","prison|nha tu",
+        "A prison holding inmates, tied to a storyline quest chain."},
+    {"colosseum","Dau Truong","Sea 1","Noi to chuc cac tran dau PvE/PvP nho.","colosseum|dau truong",
+        "Hosts small PvE/PvP matches."},
+    {"magma_village","Lang Dung Nham","Sea 1","Khu vuc nui lua voi quai sat thuong lua.","magma village|lang dung nham",
+        "A volcanic area with fire-damage mobs."},
+    {"underwater_city","Thanh Pho Duoi Nuoc","Sea 1","Thanh pho ngam duoi bien, co quest va NPC dac biet.","underwater city|thanh pho duoi nuoc",
+        "An underwater city with special quests and NPCs."},
+    {"fountain_city","Thanh Pho Suoi Nguon","Sea 1","Khu vuc cuoi First Sea voi quai cap cao hon.","fountain city|thanh pho suoi nguon",
+        "The final area of First Sea, with higher-level mobs."},
+    {"upper_skylands","Dao Troi Thuong (Upper Skylands)","Sea 1","Khu vuc cao hon cua Skylands, tiep noi Dao Troi voi quai manh hon.","upper skylands|dao troi thuong",
+        "A higher part of Skylands, continuing from Skylands with tougher mobs."},
+    {"kingdom_of_rose","Vuong Quoc Hoa Hong","Sea 2","Khu vuc mo dau Second Sea voi chuoi nhiem vu cot truyen lon.","kingdom of rose|vuong quoc hoa hong",
+        "The opening area of Second Sea with a major storyline quest chain."},
+    {"green_zone","Khu Vuc Xanh","Sea 2","Vung cay cap tam trung cua Second Sea.","green zone|khu vuc xanh",
+        "A mid-level grinding zone in Second Sea."},
+    {"graveyard","Dao Nghia Dia","Sea 2","Khu vuc u am voi quai he bong toi.","graveyard|nghia dia",
+        "A gloomy area with dark-type mobs."},
+    {"dark_arena","Dau Truong Bong Toi","Sea 2","Dau truong voi quai va boss he toi manh.","dark arena|dau truong bong toi",
+        "An arena with strong dark-type mobs and a boss."},
+    {"snow_mountain","Nui Tuyet","Sea 2","Khu vuc bang tuyet voi boss Chief Summit.","snow mountain|nui tuyet",
+        "A snowy area home to the boss Chief Summit."},
+    {"cursed_ship","Tau Ma","Sea 2","Con tau bi nguyen rua voi quai ma cap cao va boss Cursed Captain.","cursed ship|tau ma",
+        "A cursed ship with high-level ghost mobs and the boss Cursed Captain."},
+    {"forgotten_island","Dao Bi Lang Quen","Sea 2","Dao an voi quai manh va phan thuong hiem.","forgotten island|dao bi lang quen",
+        "A hidden island with strong mobs and rare rewards."},
+    {"hot_and_cold","Nong Lanh (Hot and Cold)","Sea 2","Khu vuc dac biet ket hop dia hinh nui lua va bang gia trong cung mot dao.","hot and cold|nong lanh",
+        "A special area combining volcanic and icy terrain on the same island."},
+    {"ice_castle","Lau Dai Bang (Ice Castle)","Sea 2","Lau dai bang gia, noi co NPC Thunder God lien quan toi trai Lightning (Rumble).","ice castle|lau dai bang",
+        "An icy castle, home to the Thunder God NPC tied to the Lightning (Rumble) fruit."},
+    {"remote_island","Dao Heo Lanh (Remote Island)","Sea 2","Hon dao xa xoi it nguoi ghe qua, phu hop cay cap yen tinh.","remote island|dao heo lanh",
+        "A remote island few players visit, good for quiet grinding."},
+    {"port_town","Thi Tran Cang","Sea 3","Diem khoi dau cua Third Sea, noi Dealer trai xuat hien.","port town|thi tran cang",
+        "The starting point of Third Sea, where the fruit Dealer appears."},
+    {"hydra_island","Dao Hydra","Sea 3","Dao co quai ran nhieu dau cap cao.","hydra island|dao hydra",
+        "An island with high-level multi-headed snake mobs."},
+    {"great_tree","Dai Thu","Sea 3","Khu vuc rung cay khong lo voi quest dac biet.","great tree|dai thu",
+        "A giant tree forest area with a special quest."},
+    {"floating_turtle","Rua Noi (Floating Turtle)","Sea 3","Hon dao dac biet nam tren lung mot con rua khong lo, co khu vuc cay cap rieng biet.","floating turtle|rua noi",
+        "A special island sitting on the back of a giant turtle, with its own dedicated grinding area."},
+    {"haunted_castle","Lau Dai Ma Am","Sea 3","Lau dai voi quai ma va boss cap cao Third Sea.","haunted castle|lau dai ma am",
+        "A castle with ghost mobs and a high-level Third Sea boss."},
+    {"castle_on_the_sea","Lau Dai Tren Bien (Castle on the Sea)","Sea 3","Phao dai noi giua bien, noi dien ra su kien phong thu truoc cuop bien de co co hoi nhan trai ac quy.","castle on the sea|lau dai tren bien",
+        "A fortress floating on the sea, home to a defense event against pirates for a chance at a devil fruit."},
+    {"sea_of_treats","Bien Banh Keo (Sea of Treats)","Sea 3","Khu vuc chu de banh keo gan lien voi cot truyen va Raid Dough.","sea of treats|bien banh keo",
+        "A candy-themed area tied to the storyline and the Dough raid."},
+    {"tiki_outpost","Tien Don Tiki (Tiki Outpost)","Sea 3","Noi tru an cua boss Tyrant of the Skies, co ti le rot trai Eagle.","tiki outpost|tien don tiki",
+        "The lair of the boss Tyrant of the Skies, with a chance to drop the Eagle fruit."},
+}
+
+local BOSSES_RAW = {
+    {"dough_king","King Dough","Boss giu chia khoa mo Raid Dough, can chuan bi mau cao va ne don tot.","king dough",
+        "Holds the key to unlock the Dough raid, requires high HP prep and good dodging."},
+    {"don_swan","Don Swan","Boss dung trai Spider voi bo ky nang nang cap.","don swan",
+        "A boss that uses the Spider fruit with an upgraded skill set."},
+    {"saber_expert","Saber Expert","Boss kiem si manh xuat hien o khu vuc Second Sea.","saber expert",
+        "A strong swordsman boss appearing in the Second Sea area."},
+    {"cake_prince","Cake Prince","Boss o Third Sea voi don tan cong dien rong.","cake prince",
+        "A Third Sea boss with wide-area attacks."},
+    {"tide_keeper","Tide Keeper","Boss Third Sea voi sat thuong lien quan toi nuoc kha cao.","tide keeper",
+        "A Third Sea boss with fairly high water-related damage."},
+    {"chief_summit","Chief Summit","Boss tran giu khu vuc nui tuyet Second Sea.","chief summit",
+        "A field boss guarding the snowy mountain area in Second Sea."},
+    {"fajita","Fajita","NPC/boss quan trong gan lien voi cot truyen toc V4.","fajita",
+        "An important NPC/boss tied to the V4 race storyline."},
+    {"diamond_boss","Diamond","Boss su dung trai Diamond, phong thu rat cao.","diamond boss",
+        "A boss that uses the Diamond fruit, very high defense."},
+    {"smoke_boss","Smoke","Boss o First Sea su dung trai Smoke.","smoke boss",
+        "A First Sea boss that uses the Smoke fruit."},
+    {"swan_pirates","Swan Pirates","Bang cuop bien canh gac khu vuc Kingdom of Rose.","swan pirates",
+        "A pirate crew guarding the Kingdom of Rose area."},
+    {"tyrant_of_skies","Tyrant of the Skies","Boss bay hiem, co ti le nho rot trai Eagle.","tyrant of the skies|bao chua bau troi",
+        "A rare flying boss with a small chance to drop the Eagle fruit."},
+    {"leviathan","Leviathan","Quai bien khong lo o Sea 3, nen di theo nhom dong nguoi.","leviathan",
+        "A giant sea beast in Sea 3, best fought with a large group."},
+    {"terrorshark","Terrorshark","Ca map khong lo xuat hien o vung bien nguy hiem.","terrorshark",
+        "A giant shark that appears in dangerous sea zones."},
+    {"grand_brigade","Grand Brigade","Doi cuop bien trong Ship Raid, co ti le rot trai ngau nhien.","grand brigade",
+        "A pirate crew in the Ship Raid, with a chance to drop a random fruit."},
+    {"factory_boss","Boss Nha May (Factory)","Can gay sat thuong cao nhat trong raid de nhan trai thuong.","factory boss|boss nha may",
+        "You need to deal the most damage in the raid to earn the fruit reward."},
+    {"death_king","Death King","Boss su kien Halloween, co the rot trai vat ly hiem.","death king",
+        "A Halloween event boss that can drop a rare physical fruit."},
+    {"nautical_captain","Nautical Captain","Boss can chien manh o Third Sea.","nautical captain",
+        "A strong melee boss in Third Sea."},
+    {"midnight_general","Midnight General","Boss o Dark Arena voi ky nang bong toi manh.","midnight general",
+        "A Dark Arena boss with strong dark-type skills."},
+    {"swordsman_of_rose","Swordsman of Rose","Boss kiem si giu chia khoa vao khu vuc noi thanh Kingdom of Rose.","swordsman of rose",
+        "A swordsman boss holding the key to the inner Kingdom of Rose area."},
+    {"cursed_captain","Cursed Captain","Boss chi huy tren Tau Ma (Cursed Ship), thuong di cung dam thuy thu nguyen rua, sat thuong cao va co ky nang khong che tam gan.","cursed captain|thuyen truong nguyen rua",
+        "The commanding boss on the Cursed Ship, usually accompanied by cursed sailors, with high damage and close-range crowd control."},
+    {"agony_boss","Agony","Boss dau tien su dung phien ban lam lai cua trai Pain, thua huong co che hoi sinh 'Last Stand' nen co the bat ngo hoi lai va manh hon o giai doan cuoi tran.","agony",
+        "The first boss to use the reworked version of the Pain fruit, inheriting the 'Last Stand' revive mechanic so it can unexpectedly come back stronger late in the fight."},
+}
+
+local WEAPONS_RAW = {
+    {"tushita","Tushita","Kiem huyen thoai pho bien, sat thuong va tam danh tot cho build kiem.","tushita",
+        "A popular legendary sword with good damage and range for sword builds."},
+    {"saddi","Saddi","Vu khi manh cho build kiem, doi hoi thao tac combo chuan.","saddi",
+        "A strong weapon for sword builds, requires precise combo execution."},
+    {"yama","Yama","Vu khi ba luoi noi tieng voi sat thuong cao khi combo dung cach.","yama",
+        "A famous triple-blade weapon with high damage when combo'd correctly."},
+    {"shark_saw","Shark Saw","Vu khi phu hop cho build can chien/sung ket hop.","shark saw",
+        "Suits a mixed melee/gun build."},
+    {"soul_cane","Soul Cane","Vu khi ho tro tot cho cac build combo dai hoi.","soul cane",
+        "Supports long combo-chain builds well."},
+    {"dark_blade","Dark Blade","Kiem hiem voi hieu ung bong toi dac trung.","dark blade",
+        "A rare sword with a distinctive dark visual effect."},
+    {"cursed_dual_katana","Cursed Dual Katana","Song kiem nguyen, toc do ra don nhanh.","cursed dual katana",
+        "A cursed dual-katana with fast attack speed."},
+    {"pole_v2","Pole V2","Vu khi thuc tinh manh cho build Superhuman.","pole v2|pole",
+        "A strong awakened weapon for Superhuman builds."},
+    {"rengoku","Rengoku","Vu khi sat thuong lua manh cho cac build kiem nang cao.","rengoku",
+        "A strong fire-damage weapon for advanced sword builds."},
+    {"dragon_trident","Dragon Trident","Dinh ba rong, phu hop loi danh tam trung.","dragon trident",
+        "A dragon trident, suited to mid-range fighting."},
+    {"chaser","Chaser","Vu khi co kha nang truy duoi muc tieu tot trong PvP.","chaser",
+        "Good at chasing down targets in PvP."},
+    {"hallow_scythe","Hallow Scythe","Luoi hai voi hieu ung dien rong dac trung.","hallow scythe",
+        "A scythe with a distinctive wide-area effect."},
+    {"acidum_rifle","Acidum Rifle","Sung gay sat thuong an mon theo thoi gian.","acidum rifle",
+        "A gun that deals corrosive damage over time."},
+    {"serpent_bow","Serpent Bow","Cung tam xa phu hop loi danh giu khoang cach.","serpent bow",
+        "A long-range bow suited to a keep-away playstyle."},
+    {"falcon_gun","Falcon Gun","Sung toc do ban nhanh, ho tro tot cho build sung.","falcon gun",
+        "A fast-firing gun, good support for gun builds."},
+    {"true_triple_katana","True Triple Katana","Bien the nang cap cua Triple Katana, sat thuong va toc do vung chem deu cao hon.","true triple katana|triple katana",
+        "An upgraded variant of the Triple Katana with higher damage and swing speed."},
+    {"buddy_sword","Buddy Sword","Kiem pho thong de kiem giai doan dau, danh nhanh nhung sat thuong khong cao.","buddy sword",
+        "A common early-game sword, fast but not very high damage."},
+    {"combat_knife","Combat Knife","Dao gam toc do ra don rat nhanh, phu hop combo mo man.","combat knife",
+        "A knife with very fast attack speed, good for opening combos."},
+    {"cutlass","Cutlass","Kiem co dien de kiem, thuong dung lam vu khi tam thoi giai doan dau.","cutlass",
+        "An easy-to-get classic sword, usually a temporary early-game weapon."},
+    {"bisento","Bisento","Vu khi tam danh rong, phu hop gom nhieu muc tieu cung luc.","bisento",
+        "A wide-range weapon, good for hitting multiple targets at once."},
+    {"iron_mace","Iron Mace","Chuy sat sat thuong choang tot, huu ich de ngat combo doi thu.","iron mace",
+        "An iron mace with good stun damage, useful for interrupting an opponent's combo."},
+    {"death_scythe","Death Scythe","Luoi hai tu than, hieu ung hinh anh dac trung va sat thuong on dinh.","death scythe",
+        "A death scythe with a distinctive visual effect and stable damage."},
+    {"ice_blade","Ice Blade","Kiem bang gia co kha nang lam cham doi thu khi trung don.","ice blade",
+        "An ice sword that can slow opponents on hit."},
+}
+
+local FIGHTING_STYLES_RAW = {
+    {"superhuman","Superhuman","Fighting style co ban de nang cap som, thao tac don gian, phu hop nguoi moi lam quen combo tay khong.","superhuman|sieu nhan",
+        "A basic fighting style, easy to level up early, simple inputs, good for beginners learning fist combos."},
+    {"electric_claw","Electric Claw","Toc do ra don rat nhanh voi hieu ung dien giat, tot de gom combo lien tuc.","electric claw|mong vuot dien",
+        "Very fast attack speed with an electric-shock effect, good for chaining continuous combos."},
+    {"dragon_talon","Dragon Talon","Cac don da lien hoan manh, tot cho loi choi can chien don gian ma hieu qua.","dragon talon|mong rong",
+        "Strong chained kicks, good for a simple but effective melee playstyle."},
+    {"sharkman_karate","Sharkman Karate","Sat thuong tang manh khi o duoi nuoc, la lua chon tot cho nguoi choi thich chien dau tren bien.","sharkman karate|vo ca map",
+        "Damage is boosted heavily underwater, a great pick for players who like fighting at sea."},
+    {"death_step","Death Step","Ky nang dich chuyen ne don rat manh, gan nhu bat buoc de ne cac don AoE nguy hiem cua boss/raid.","death step|buoc chan tu than",
+        "A very strong dodge/dash skill, almost mandatory for avoiding dangerous AoE attacks from bosses and raids."},
+    {"godhuman","Godhuman","Fighting style cuoi cung, sat thuong cao va combo linh hoat, gan nhu tieu chuan cho nguoi choi late-game.","godhuman|con nguoi than thanh",
+        "The final fighting style, high damage and flexible combos, practically the standard for late-game players."},
+    {"dragon_claw","Dragon Claw","Ban nang cap cua Dragon Talon, tam danh va sat thuong lien hoan tot hon.","dragon claw|vuot rong",
+        "An upgrade of Dragon Talon, with better range and chained damage."},
+    {"cyborg","Cyborg (V2)","Fighting style co kha nang bien hinh cyborg, tang chi so trong thoi gian ngan, ho tro tot cho farm va PvP.","cyborg|nguoi may",
+        "Can transform into a cyborg form, boosting stats for a short time, good support for both farming and PvP."},
+    {"superman_run","Superhuman Sprint","Ky nang chay/lao nhanh giup rut ngan khoang cach voi doi thu hoac muc tieu farm.","superhuman sprint|chay nhanh",
+        "A fast sprint/dash skill that closes the distance to an opponent or a farming target."},
+}
+
+------------------------------------------------------------------------------
+-- ENTRY REGISTRATION + BILINGUAL TEMPLATES
+------------------------------------------------------------------------------
+
+local ENTRY_DB = {}
+local ENTRY_INDEX = {}
+local ALL_ALIAS_TOKENS = {}
+
+local function registerEntry(entry)
+    ENTRY_DB[#ENTRY_DB+1] = entry
+    ENTRY_INDEX[entry.id] = entry
+    for _, alias in ipairs(entry.aliases) do
+        for _, word in ipairs(tokenize(alias)) do
+            ALL_ALIAS_TOKENS[word] = ALL_ALIAS_TOKENS[word] or {}
+            table.insert(ALL_ALIAS_TOKENS[word], entry.id)
+        end
+    end
+end
+
+local function buildFruitEntry(row)
+    local id, name, kind, tier, role, note, aliasStr, note_en = table.unpack(row)
+    local aliases = splitPipe(aliasStr)
+    local mood = tierMood(tier)
+    local kindEn = KIND_EN[kind] or kind
+    local roleEnTxt = roleEn(role)
+    local templates = {
+        { patterns = {"la gi","loai gi","la trai gi","what is","what kind","kind of fruit"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s]:</b> This is a %s-type fruit, usually ranked %s tier. %s %s", name, kindEn, tier, note_en, emo(mood))
+            end
+            return string.format("<b>[%s]:</b> Day la trai he %s, thuong duoc xep %s tier. %s %s", name, kind, tier, note, emo(mood))
+          end },
+        { patterns = {"manh khong","co manh khong","danh gia","is it good","how strong","how good","rating"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - RATING]:</b> Ranked %s tier, best suited for %s. %s %s", name, tier, roleEnTxt, note_en, emo(mood))
+            end
+            return string.format("<b>[%s - DANH GIA]:</b> Xep hang %s tier, phu hop %s. %s %s", name, tier, role, note, emo(mood))
+          end },
+        { patterns = {"gia bao nhieu","gia the nao","dat khong","price","how much","worth"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - PRICE]:</b> Price varies with rarity. Check the Blox Fruit Dealer or the trade chat for the current going rate. %s", name, emo("cute"))
+            end
+            return string.format("<b>[%s - GIA]:</b> Gia dao dong theo do hiem cua fruit. Ban nen kiem tra Blox Fruit Dealer hoac cho trade de biet gia chuan o phien ban hien tai nhe %s", name, emo("cute"))
+          end },
+        { patterns = {"thuc tinh","awaken","cach thuc tinh","awakening"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - AWAKENING]:</b> You'll need to find the matching awakening NPC and complete its quest/materials to boost damage and unlock skill effects. %s", name, emo("cute"))
+            end
+            return string.format("<b>[%s - THUC TINH]:</b> Can tim NPC thuc tinh tuong ung va hoan thanh nhiem vu/nguyen lieu rieng cho trai nay de tang sat thuong va mo khoa hieu ung ky nang. %s", name, emo("cute"))
+          end },
+        { patterns = {"hop loi choi nao","choi the nao","pve hay pvp","playstyle","how to play","good for pvp","good for pve"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - PLAYSTYLE]:</b> Best suited for %s. %s %s", name, roleEnTxt, note_en, emo(mood))
+            end
+            return string.format("<b>[%s - LOI CHOI]:</b> Phu hop nhat cho %s. %s %s", name, role, note, emo(mood))
+          end },
+        { patterns = {"cay co tot khong","farm co tot khong","len level","grind","leveling","farming"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - GRINDING]:</b> %s %s", name, note_en, emo(mood))
+            end
+            return string.format("<b>[%s - CAY CAP]:</b> %s %s", name, note, emo(mood))
+          end },
+        { patterns = {"nen mua khong","co nen lay khong","co dang khong","should i get","worth getting","worth it"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - WORTH GETTING?]:</b> If you're focused on %s, this fruit is worth considering, currently around %s tier. %s", name, roleEnTxt, tier, emo(mood))
+            end
+            return string.format("<b>[%s - CO NEN LAY]:</b> Neu ban uu tien %s thi trai nay dang can nhac, hien dang o muc %s tier. %s", name, role, tier, emo(mood))
+          end },
+        { patterns = {"kiem o dau","lay o dau","mua o dau","where to get","how to get","where to find","how to buy"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - HOW TO GET]:</b> Buy it from the Blox Fruit Dealer (if in stock), roll the Gacha, pick up a random spawn on the map, or trade with another player. %s", name, emo("cute"))
+            end
+            return string.format("<b>[%s - CACH LAY]:</b> Mua tu Blox Fruit Dealer (neu con hang), quay Gacha, nhat trai roi ngau nhien tren ban do, hoac trade voi nguoi choi khac. %s", name, emo("cute"))
+          end },
+        { patterns = {"khac che","bi khac che","yeu diem","diem yeu","weakness","counter","countered by"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - WEAKNESS]:</b> Like most fruits, %s can be countered by opponents with higher mobility or a stance-breaking combo (stun/knockback) before you get to act. Practicing dodge/block timing helps offset this. %s", name, string.lower(name), emo("neutral"))
+            end
+            return string.format("<b>[%s - DIEM YEU]:</b> Nhu hau het cac trai khac, %s de bi khac che boi doi thu co mobility cao hon hoac co combo pha the (stun/knockback) truoc khi ban kip ra don. Nen luyen phan xa ne/block de bu lai. %s", name, string.lower(name), emo("neutral"))
+          end },
+        { patterns = {"build gi","ket hop","fighting style nao","di chung voi gi","what to pair","best build","combo with"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - BUILD SUGGESTION]:</b> Pair it with a strong melee fighting style (like Electric Claw, Sharkman Karate, or Godhuman) plus a weapon with good combo potential to maximize chained damage. %s", name, emo("hype"))
+            end
+            return string.format("<b>[%s - GOI Y BUILD]:</b> Nen ket hop cung mot fighting style can chien manh (nhu Electric Claw, Sharkman Karate hoac Godhuman) cung vu khi co combo tot de toi uu sat thuong lien hoan. %s", name, emo("hype"))
+          end },
+    }
+    registerEntry({ id = id, aliases = aliases, templates = templates, kind = "fruit", tier = tier, role = role, note = note, note_en = note_en, name = name })
+end
+for _, row in ipairs(FRUITS_RAW) do buildFruitEntry(row) end
+
+local function buildIslandEntry(row)
+    local id, name, sea, note, aliasStr, note_en = table.unpack(row)
+    local aliases = splitPipe(aliasStr)
+    local templates = {
+        { patterns = {"o dau","vi tri","nam o dau","where is","location","where can i find"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s]:</b> Located in %s. Use a boat or your ship to travel there. %s", name, sea, emo("cute"))
+            end
+            return string.format("<b>[%s]:</b> Thuoc khu vuc %s. Dung la ban hoac thuyen de di chuyen toi day nhe %s", name, sea, emo("cute"))
+          end },
+        { patterns = {"co gi","lam gi o day","co gi hay","what's there","what to do"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s]:</b> %s %s", name, note_en, emo("neutral"))
+            end
+            return string.format("<b>[%s]:</b> %s %s", name, note, emo("neutral"))
+          end },
+        { patterns = {"quai manh khong","nguy hiem khong","how dangerous","strong mobs","tough mobs"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - MOBS]:</b> Difficulty varies within %s, so check the recommended level before grinding to avoid wiping your team. %s", name, sea, emo("funny"))
+            end
+            return string.format("<b>[%s - QUAI]:</b> Do kho tuy khu vuc trong %s, nen kiem tra level khuyen nghi truoc khi vao cay de tranh gay doi hinh %s", name, sea, emo("funny"))
+          end },
+        { patterns = {"co boss khong","boss gi","co quest khong","any boss","any quest"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - BOSS/QUEST]:</b> Many spots in %s have their own NPC or boss tied to the storyline. Ask me the boss's name for more detail! %s", name, sea, emo("hype"))
+            end
+            return string.format("<b>[%s - BOSS/QUEST]:</b> Nhieu dao trong %s co NPC hoac boss rieng gan voi cot truyen. Hoi minh ten boss cu the de biet them chi tiet nhe! %s", name, sea, emo("hype"))
+          end },
+    }
+    registerEntry({ id = id, aliases = aliases, templates = templates, kind = "island", name = name })
+end
+for _, row in ipairs(ISLANDS_RAW) do buildIslandEntry(row) end
+
+local function buildBossEntry(row)
+    local id, name, note, aliasStr, note_en = table.unpack(row)
+    local aliases = splitPipe(aliasStr)
+    local templates = {
+        { patterns = {"danh the nao","cach danh","chien thuat","how to beat","how to fight","strategy"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s]:</b> %s Bring high HP and practice dodge/block timing before fighting head-on. %s", name, note_en, emo("hype"))
+            end
+            return string.format("<b>[%s]:</b> %s Nen chuan bi mau cao va luyen ne don (dash/block) truoc khi danh truc dien. %s", name, note, emo("hype"))
+          end },
+        { patterns = {"roi gi","phan thuong","cho gi","drops","rewards","loot"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - REWARDS]:</b> Usually drops in-game money, Fragments, or has a small chance to drop an item/fruit depending on the boss's rarity. %s", name, emo("cute"))
+            end
+            return string.format("<b>[%s - PHAN THUONG]:</b> Thuong rot tien trong game, Fragment, hoac co ti le nho rot vat pham/trai hiem tuy do hiem cua boss. %s", name, emo("cute"))
+          end },
+        { patterns = {"o dau","tim o dau","xuat hien o dau","where to find","location"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - LOCATION]:</b> Appears in an area tied to the storyline or a related quest, usually with a quest marker on the map. %s", name, emo("neutral"))
+            end
+            return string.format("<b>[%s - VI TRI]:</b> Xuat hien tai khu vuc gan lien voi cot truyen hoac nhiem vu lien quan toi boss nay, thuong co chi dan quest tren ban do. %s", name, emo("neutral"))
+          end },
+        { patterns = {"manh khong","kho khong","de danh khong","how hard","is it tough","difficulty"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - DIFFICULTY]:</b> %s Not recommended to solo if your level is still low. %s", name, note_en, emo("funny"))
+            end
+            return string.format("<b>[%s - DO KHO]:</b> %s Khong nen danh solo neu level con thap. %s", name, note, emo("funny"))
+          end },
+    }
+    registerEntry({ id = id, aliases = aliases, templates = templates, kind = "boss", name = name })
+end
+for _, row in ipairs(BOSSES_RAW) do buildBossEntry(row) end
+
+local function buildWeaponEntry(row)
+    local id, name, note, aliasStr, note_en = table.unpack(row)
+    local aliases = splitPipe(aliasStr)
+    local templates = {
+        { patterns = {"manh khong","dang dung khong","tot khong","is it good","worth using","how good"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s]:</b> %s %s", name, note_en, emo("hype"))
+            end
+            return string.format("<b>[%s]:</b> %s %s", name, note, emo("hype"))
+          end },
+        { patterns = {"lay o dau","kiem o dau","farm o dau","where to get","how to get","how to farm"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - HOW TO GET]:</b> Usually drops from a boss, sold by a special NPC, or crafted from rare materials depending on the weapon. %s", name, emo("cute"))
+            end
+            return string.format("<b>[%s - CACH LAY]:</b> Thuong roi tu boss, mua o NPC dac biet, hoac che tao tu nguyen lieu hiem tuy vu khi. %s", name, emo("cute"))
+          end },
+        { patterns = {"gia bao nhieu","dat khong","price","how much","worth"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - PRICE]:</b> Trade value fluctuates quite a bit, best to check with the community before buying or selling. %s", name, emo("neutral"))
+            end
+            return string.format("<b>[%s - GIA]:</b> Gia tri tren thi truong trade bien dong kha nhieu, nen tham khao cong dong truoc khi mua ban. %s", name, emo("neutral"))
+          end },
+    }
+    registerEntry({ id = id, aliases = aliases, templates = templates, kind = "weapon", name = name })
+end
+for _, row in ipairs(WEAPONS_RAW) do buildWeaponEntry(row) end
+
+local function buildFightingStyleEntry(row)
+    local id, name, note, aliasStr, note_en = table.unpack(row)
+    local aliases = splitPipe(aliasStr)
+    local templates = {
+        { patterns = {"manh khong","dang tap khong","tot khong","is it good","worth training","how good"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s]:</b> %s %s", name, note_en, emo("hype"))
+            end
+            return string.format("<b>[%s]:</b> %s %s", name, note, emo("hype"))
+          end },
+        { patterns = {"hoc o dau","lay o dau","train o dau","where to learn","how to get","where to train"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - HOW TO LEARN]:</b> Find the NPC that teaches this fighting style (usually on a main island of each Sea) and complete the requirement/quest. %s", name, emo("cute"))
+            end
+            return string.format("<b>[%s - CACH HOC]:</b> Tim NPC day fighting style tuong ung (thuong o cac dao chinh cua tung Sea) va hoan thanh dieu kien/nhiem vu di kem. %s", name, emo("cute"))
+          end },
+        { patterns = {"combo the nao","danh the nao","ket hop gi","how to combo","how to play","pair with"},
+          build = function(lang)
+            if lang == "en" then
+                return string.format("<b>[%s - COMBOS]:</b> Practice the basic move order first, then pair it with a mobility weapon or fruit for smoother combos. %s", name, emo("neutral"))
+            end
+            return string.format("<b>[%s - COMBO]:</b> Nen luyen tap thu tu don co ban truoc, sau do ket hop voi mot vu khi hoac trai co dong de noi combo muot hon. %s", name, emo("neutral"))
+          end },
+    }
+    registerEntry({ id = id, aliases = aliases, templates = templates, kind = "style", name = name })
+end
+for _, row in ipairs(FIGHTING_STYLES_RAW) do buildFightingStyleEntry(row) end
+
+------------------------------------------------------------------------------
+-- TOPIC ENTRIES (bilingual)
+------------------------------------------------------------------------------
+
+registerEntry({ id = "v4", aliases = {"toc v4","v4","tong tien boi","race v4"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "<b>[V4 RACE GUIDE]:</b> Requires max level, defeating the Rip_Indra boss, and completing the Trial challenge at the Time Temple. Ask me 'where' or 'rewards' for more! 😁"
+        end
+        return "<b>[CAM NANG TOC V4]:</b> Yeu cau max level, ha boss Rip_Indra va lam thu thach Trial tai Den Tho Thoi Gian. Hoi tiep 'o dau' hoac 'phan thuong' nhe! 😁"
+    end },
+    { patterns = {"o dau","dao nao","where","location"}, build = function(lang)
+        if lang == "en" then
+            return "<b>[V4 - LOCATION]:</b> Watch for a full moon in Sea 3, sail out to find Mirage Island, use Observation Haki looking up at the moon to spot the reflected light, then find the hidden gear near the island. 🥹"
+        end
+        return "<b>[TOC V4 - VI TRI]:</b> Canh dem trang tron o Sea 3, ra bien tim dao Huyen Bi (Mirage Island), bat Haki quan sat nhin len mat trang de tim luong sang phan chieu roi nhat banh rang an quanh dao. 🥹"
+    end },
+    { patterns = {"phan thuong","duoc gi","reward","rewards"}, build = function(lang)
+        if lang == "en" then
+            return "<b>[V4 - REWARDS]:</b> A big boost to melee, gun, and devil fruit stats, plus an exclusive V4 outfit based on your race. 🥳"
+        end
+        return "<b>[TOC V4 - PHAN THUONG]:</b> Tang manh chi so can chien, sung va trai ac quy, cung bo trang phuc V4 doc quyen theo chung toc. 🥳"
+    end },
+}})
+
+registerEntry({ id = "rip_indra", aliases = {"rip indra","rip_indra","boss den v4"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "<b>[BOSS RIP_INDRA]:</b> A high-level boss needed to unlock the V4 race, with wide-area lightning AoE attacks. Bring high HP and dodge in the telegraphed direction before it fires. 🥳"
+        end
+        return "<b>[BOSS RIP_INDRA]:</b> Boss cap cao dung de mo toc V4, co don AoE set dien rong. Nen mang mau cao va ne theo huong chi bao truoc khi no ra don. 🥳"
+    end },
+}})
+
+registerEntry({ id = "code", aliases = {"code","ma code","codes"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "<b>[X2 EXP CODES]:</b> Codes change and expire often, so I'd recommend checking the game's official announcement channel or Discord for the newest working codes rather than relying on an old, expired one! 🥳"
+        end
+        return "<b>[MA X2 EXP]:</b> Code hay thay doi va het han lien tuc, minh khuyen ban kiem tra kenh thong bao chinh thuc hoac Discord cua game de lay code moi nhat con hieu luc, tranh dung code cu da het han! 🥳"
+    end },
+}})
+
+registerEntry({ id = "sea_event", aliases = {"sea event","leviathan event","boss bien","sea beast"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "<b>[SEA BOSSES]:</b> Sail out to the dangerous level 5-6 zones in Sea 3 at night to hunt Terrorshark or find Leviathan. Go with a full team since their HP is huge. 😁"
+        end
+        return "<b>[BOSS BIEN]:</b> Lai thuyen ra vung nguy hiem cap 5-6 tai Sea 3 ban dem de san Terrorshark hoac tim Leviathan. Nen di theo team dong nguoi vi mau boss rat trau. 😁"
+    end },
+}})
+
+registerEntry({ id = "tier_list", aliases = {"tier list","trai nao manh nhat","top trai","best fruit","strongest fruit"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "<b>[2026 TIER LIST OVERVIEW]:</b> The current top group (T0/S) usually includes Portal, Kitsune, Dragon, Buddha, alongside Leopard, Mammoth, Tiger, Yeti, and Fiend just below. Ask about a specific fruit, or say 'compare X and Y', for a deeper breakdown! 🥳"
+        end
+        return "<b>[TIER LIST TONG QUAN 2026]:</b> Nhom manh nhat hien tai (T0/S) thuong gom Portal, Kitsune, Dragon, Buddha, kem theo Leopard, Mammoth, Tiger, Yeti, Fiend o nhom sat ngay duoi. Go ten mot trai cu the hoac 'so sanh X va Y' de minh phan tich ky hon nhe! 🥳"
+    end },
+}})
+
+registerEntry({ id = "reroll", aliases = {"doi trai","reroll","chuyen trai"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "<b>[REROLLING A FRUIT]:</b> Use the Trader NPC near the central town to swap your devil fruit, usually costing in-game money or Fragments depending on the fruit type. 😁"
+        end
+        return "<b>[DOI/REROLL TRAI]:</b> Dung NPC Trader gan khu vuc trung tam de doi trai ac quy, thuong ton tien trong game hoac Fragment tuy loai trai. 😁"
+    end },
+}})
+
+registerEntry({ id = "greeting", aliases = {"chao","hello","hi","alo","hey"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "Hey there! I'm your offline assistant with 800+ combos of Blox Fruits data 🥰 Ask me about fruits, islands, bosses, weapons, fighting styles, codes, or try 'compare dragon and kitsune'!"
+        end
+        return "Chao ban! Minh la tro ly offline hon 800 to hop du lieu ve Blox Fruits 🥰 Hoi minh ve trai, dao, boss, vu khi, fighting style, code, hoac thu go 'so sanh dragon va kitsune' nhe!"
+    end },
+}})
+
+registerEntry({ id = "thanks", aliases = {"cam on","thank you","thanks"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "No problem at all, happy grinding! 🥰 Ask me anything else anytime."
+        end
+        return "Khong co gi dau, chuc ban cay trai vui ve nha! 🥰 Can hoi gi them cu go tiep nhe."
+    end },
+}})
+
+registerEntry({ id = "help", aliases = {"huong dan","help","cach dung","cach hoi","co the hoi gi","how to use","what can you do"}, kind = "topic", templates = {
+    { patterns = {}, build = function(lang)
+        if lang == "en" then
+            return "<b>[QUICK GUIDE]:</b> You can message me naturally, in Vietnamese or English, e.g.:\n"
+                .. "- 'is buddha good', 'what to build with kitsune'\n"
+                .. "- 'compare dragon and kitsune'\n"
+                .. "- 'tushita vs saddi which is better' (ask about several at once)\n"
+                .. "- 'list of fruits / islands / bosses / weapons / fighting styles'\n"
+                .. "- 'v4 race', 'codes', 'rip indra'\n"
+                .. "Just chat like normal, I'll try my best to understand! 🥳"
+        end
+        return "<b>[HUONG DAN NHANH]:</b> Ban co the nhan tin tu nhien, viet tat, khong dau deu duoc, vi du:\n"
+            .. "- 'buddha manh khong', 'kitsune build gi'\n"
+            .. "- 'so sanh dragon va kitsune' (so sanh 2 trai)\n"
+            .. "- 'tushita vs saddi cai nao ngon' (hoi gop nhieu muc)\n"
+            .. "- 'danh sach trai / dao / boss / vu khi / fighting style'\n"
+            .. "- 'toc v4', 'code', 'rip indra'\n"
+            .. "Cu nhan tin thoai mai nhu nhan tin binh thuong, minh se co gang hieu nhe! 🥳"
+    end },
+}})
+
+------------------------------------------------------------------------------
+-- LIST / COMPARE / FUZZY MATCH / MAIN BRAIN
+------------------------------------------------------------------------------
+
+local function buildListText(rawList, headerVn, headerEn, lang)
+    local names = {}
+    for _, row in ipairs(rawList) do names[#names+1] = row[2] end
+    if lang == "en" then
+        return string.format("<b>[%s]:</b> %s %s", headerEn, table.concat(names, ", "), emo("cute"))
+    end
+    return string.format("<b>[%s]:</b> %s %s", headerVn, table.concat(names, ", "), emo("cute"))
+end
+
+local function findFruitRowById(id)
+    for _, row in ipairs(FRUITS_RAW) do
+        if row[1] == id then return row end
+    end
+    return nil
+end
+
+local function findFruitIdInText(text)
+    local bestId, bestScore = nil, 0
+    for _, entry in ipairs(ENTRY_DB) do
+        if entry.kind == "fruit" then
+            local score = countMatches(text, entry.aliases)
+            if score > bestScore then bestId, bestScore = entry.id, score end
+        end
+    end
+    return bestId
+end
+
+local function tryCompare(text, lang)
+    if not (string.find(text, "so sanh", 1, true) or string.find(text, " vs ", 1, true)
+        or string.find(text, "hay hon", 1, true) or string.find(text, "compare", 1, true)
+        or string.find(text, "versus", 1, true) or string.find(text, "better", 1, true)) then
+        return nil
+    end
+    local firstHalf, secondHalf = text, text
+    local splitPos = string.find(text, " va ") or string.find(text, " vs ") or string.find(text, " hay ")
+        or string.find(text, " and ") or string.find(text, " versus ")
+    if splitPos then
+        firstHalf = string.sub(text, 1, splitPos)
+        secondHalf = string.sub(text, splitPos)
+    end
+    local idA = findFruitIdInText(firstHalf)
+    local idB = findFruitIdInText(secondHalf)
+    if idA and idB and idA ~= idB then
+        local rowA, rowB = findFruitRowById(idA), findFruitRowById(idB)
+        if rowA and rowB then
+            if lang == "en" then
+                return string.format(
+                    "<b>[COMPARE %s vs %s]:</b>\n- %s: %s tier, best for %s. %s\n- %s: %s tier, best for %s. %s\n=> Both are strong in their own way, pick based on whether you prefer PvP or PvE! %s",
+                    rowA[2], rowB[2],
+                    rowA[2], rowA[4], roleEn(rowA[5]), rowA[8],
+                    rowB[2], rowB[4], roleEn(rowB[5]), rowB[8],
+                    emo("hype")
+                )
+            end
+            return string.format(
+                "<b>[SO SANH %s vs %s]:</b>\n- %s: %s tier, phu hop %s. %s\n- %s: %s tier, phu hop %s. %s\n=> Ca hai deu manh theo cach rieng, chon tuy theo ban uu tien PvP hay PvE nhe! %s",
+                rowA[2], rowB[2],
+                rowA[2], rowA[4], rowA[5], rowA[6],
+                rowB[2], rowB[4], rowB[5], rowB[6],
+                emo("hype")
+            )
+        end
+    end
+    return nil
+end
+
+local currentContext = nil
+
+local function findFreshEntry(text)
+    local best, bestScore = nil, 0
+    for _, entry in ipairs(ENTRY_DB) do
+        local score = countMatches(text, entry.aliases)
+        if score > bestScore then
+            best, bestScore = entry, score
+        end
+    end
+    return best
+end
+
+-- Phat hien nhieu chu de trong cung mot cau (vd: "buddha va dragon manh khong",
+-- "cho hoi tushita, saddi, yama cai nao ngon") de tra loi gop mot luot thay vi
+-- chi bat dung 1 tu khoa dau tien
+local function findMultipleEntries(text)
+    local found, seen = {}, {}
+    for _, entry in ipairs(ENTRY_DB) do
+        if entry.kind ~= "topic" and countMatches(text, entry.aliases) > 0 and not seen[entry.id] then
+            seen[entry.id] = true
+            found[#found+1] = entry
+        end
+    end
+    return found
+end
+
+local function findFuzzyEntry(text)
+    local words = tokenize(text)
+    local votes = {}
+    for _, w in ipairs(words) do
+        local bestToken, bestDist = nil, math.huge
+        for aliasWord, _ in pairs(ALL_ALIAS_TOKENS) do
+            if math.abs(#aliasWord - #w) <= 2 then
+                local d = levenshtein(w, aliasWord)
+                if d < bestDist then bestDist, bestToken = d, aliasWord end
+            end
+        end
+        local threshold = (#w <= 4) and 1 or 2
+        if bestToken and bestDist <= threshold then
+            for _, id in ipairs(ALL_ALIAS_TOKENS[bestToken]) do
+                votes[id] = (votes[id] or 0) + 1
+            end
+        end
+    end
+    local bestId, bestCount = nil, 0
+    for id, count in pairs(votes) do
+        if count > bestCount then bestId, bestCount = id, count end
+    end
+    return bestId and ENTRY_INDEX[bestId] or nil
+end
+
+local function resolveTemplate(entry, text)
+    for _, tmpl in ipairs(entry.templates) do
+        if #tmpl.patterns > 0 and anyMatch(text, tmpl.patterns) then
+            return tmpl
+        end
+    end
+    return entry.templates[1]
+end
+
+local function processOmniIntelligence(prompt)
+    local normalizedText = normalize(prompt)
+    local lang = detectLanguage(prompt, normalizedText)
+    local text = normalizedText
+
+    local compareResult = tryCompare(text, lang)
+    if compareResult then
+        currentContext = nil
+        return compareResult
+    end
+
+    if string.find(text, "danh sach", 1, true) or string.find(text, "list ", 1, true)
+        or string.find(text, "list of", 1, true) then
+        if anyMatch(text, {"trai","fruit"}) then return buildListText(FRUITS_RAW, "DANH SACH TRAI", "LIST OF FRUITS", lang) end
+        if anyMatch(text, {"dao","island"}) then return buildListText(ISLANDS_RAW, "DANH SACH DAO", "LIST OF ISLANDS", lang) end
+        if anyMatch(text, {"boss"}) then return buildListText(BOSSES_RAW, "DANH SACH BOSS", "LIST OF BOSSES", lang) end
+        if anyMatch(text, {"vu khi","weapon"}) then return buildListText(WEAPONS_RAW, "DANH SACH VU KHI", "LIST OF WEAPONS", lang) end
+        if anyMatch(text, {"fighting style","phong cach","style"}) then return buildListText(FIGHTING_STYLES_RAW, "DANH SACH FIGHTING STYLE", "LIST OF FIGHTING STYLES", lang) end
+    end
+
+    -- Cau hoi kieu "cao cap": nhac toi nhieu chu de cung luc (2-4 muc) ma
+    -- khong dung tu "so sanh" -> gop tra loi ngan gon cho tung muc luon
+    local multi = findMultipleEntries(text)
+    if #multi >= 2 and #multi <= 4 then
+        local parts = {}
+        for _, e in ipairs(multi) do
+            parts[#parts+1] = resolveTemplate(e, text).build(lang)
+        end
+        currentContext = multi[#multi].id
+        return table.concat(parts, "\n\n")
+    end
+
+    local freshEntry = findFreshEntry(text)
+
+    if not freshEntry then
+        freshEntry = findFuzzyEntry(text)
+    end
+
+    local activeEntry = freshEntry
+    if not activeEntry and currentContext then
+        activeEntry = ENTRY_INDEX[currentContext]
+    end
+
+    if activeEntry then
+        currentContext = activeEntry.id
+        local tmpl = resolveTemplate(activeEntry, text)
+        return tmpl.build(lang)
+    end
+
+    currentContext = nil
+    if lang == "en" then
+        return "<b>[RESULT]:</b> I didn't catch that keyword 😭 Try a fruit name (e.g. 'buddha'), an island, a boss, a weapon, a fighting style (e.g. 'godhuman'), 'v4 race', 'codes', 'list of fruits', 'compare dragon and kitsune', or type 'help' to see how to ask!"
+    end
+    return "<b>[KET QUA]:</b> Toi chua hieu tu khoa nay 😭 Thu go ten mot trai (vd 'buddha'), mot dao, mot boss, mot vu khi, mot fighting style (vd 'godhuman'), 'toc v4', 'code', 'danh sach trai', 'so sanh dragon va kitsune', hoac go 'huong dan' de xem cach hoi nhe!"
+end
+
+local function onSend()
+    local text = InputBox.Text
+    if text ~= "" then
+        playClickSound()
+        InputBox.Text = ""
+        addMessage("Ban / You", text, Color3.fromRGB(0, 150, 255))
+
+        local ThinkingMsg = addMessage("He Thong", "<i>[Dang tra du lieu... / Looking it up...]</i>", Color3.fromRGB(130, 130, 135))
+        task.spawn(function()
+            local responseText = processOmniIntelligence(text)
+            task.wait(0.2)
+            ThinkingMsg:Destroy()
+            addMessage("He Thong", responseText, Color3.fromRGB(0, 220, 140))
+        end)
+    end
+end
+
+SendBtn.MouseButton1Click:Connect(onSend)
+InputBox.FocusLost:Connect(function(enterPressed) if enterPressed then onSend() end end)
+
+local rotSpeed = 90
+RunService.RenderStepped:Connect(function(dt) RainbowGradient.Rotation = (RainbowGradient.Rotation + (rotSpeed * dt)) % 360 end)
+TweenService:Create(BaseHolder, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = FinalSize}):Play()
+
+local dragging, dragInput, dragStart, startPos
+local function update(input)
+    local delta = input.Position - dragStart
+    BaseHolder.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+BaseHolder.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true dragStart = input.Position startPos = BaseHolder.Position
+        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+    end
+end)
+BaseHolder.InputChanged:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end end)
+UserInputService.InputChanged:Connect(function(input) if input == dragInput and dragging then update(input) end end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    playClickSound()
+    local close = TweenService:Create(BaseHolder, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)})
+    close:Play()
+    close.Completed:Connect(function() CoreMenu:Destroy() end)
+end)

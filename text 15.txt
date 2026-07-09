@@ -1,0 +1,12 @@
+local function chayScript1()
+    loadstring(game:HttpGet("LINK_SCRIPT_1"))()
+end
+
+local function chayScript2()
+    loadstring(game:HttpGet("LINK_SCRIPT_2"))()
+end
+
+-- Gọi lần lượt
+chayScript1()
+task.wait(2)
+chayScript2()

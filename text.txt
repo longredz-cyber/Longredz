@@ -1,0 +1,1030 @@
+-- ==================================================
+-- 🔐 HỆ THỐNG KEY RANDOM 24H + MENU THIÊN HÀ 3D + THỜI GIAN CHỜ
+-- ==================================================
+local validKeys = {
+	"BLOX-7391-2847-5062", "BLOX-1859-3742-9105", "BLOX-4206-1953-7831", "BLOX-9572-6048-2319",
+	"BLOX-3184-5927-8064", "BLOX-6725-8193-4507", "BLOX-2947-1058-6392", "BLOX-5813-7246-1904",
+	"BLOX-8052-3671-9425", "BLOX-1476-9302-5817", "BLOX-9203-4851-7639", "BLOX-3581-2094-6148",
+	"BLOX-7162-5439-8205", "BLOX-4937-8105-2761", "BLOX-2694-7382-5019", "BLOX-8415-3967-1253",
+	"BLOX-5379-1824-6947", "BLOX-1028-9573-4382", "BLOX-6853-4291-7156", "BLOX-3974-6185-2493",
+	"BLOX-9126-3750-8571", "BLOX-4502-7916-3028", "BLOX-7691-2583-9406", "BLOX-2835-9047-6132",
+	"BLOX-5719-1362-8954", "BLOX-8347-6201-4729", "BLOX-1952-4873-3065", "BLOX-6408-2957-7813",
+	"BLOX-3271-8519-5492", "BLOX-9014-5732-1687", "BLOX-4196-7084-2531", "BLOX-7583-3190-9246",
+	"BLOX-2749-9615-6803", "BLOX-5932-1847-4175", "BLOX-8617-4253-3928", "BLOX-1305-6972-8541",
+	"BLOX-6824-2139-7059", "BLOX-3491-8706-5214", "BLOX-9753-4381-1602", "BLOX-2068-7594-9375",
+	"BLOX-5182-3427-6891", "BLOX-8945-1073-2548", "BLOX-1739-9265-4037", "BLOX-6357-5812-8194",
+	"BLOX-3820-7491-5623", "BLOX-9418-2637-1086", "BLOX-4673-8920-3752", "BLOX-7295-3148-9561",
+	"BLOX-2584-6739-4208", "BLOX-5031-9417-8379", "BLOX-8762-1504-2945", "BLOX-1493-4276-7182",
+	"BLOX-6910-8352-3697", "BLOX-3158-5903-9416", "BLOX-9827-2461-5073", "BLOX-4369-7185-2859",
+	"BLOX-7041-3926-8634", "BLOX-2973-6510-4127", "BLOX-5806-1793-9358", "BLOX-8592-4061-3714",
+	"BLOX-1284-9537-6491", "BLOX-6731-2805-7925", "BLOX-3429-8176-5308", "BLOX-9615-4923-1847",
+	"BLOX-2173-7549-9062", "BLOX-5948-3271-6815", "BLOX-8307-1659-4293", "BLOX-1562-9048-7351",
+	"BLOX-6849-2734-8109", "BLOX-3957-6182-5476", "BLOX-9281-4507-1934", "BLOX-4726-8391-3052",
+	"BLOX-7105-3864-9287", "BLOX-2894-7053-6143", "BLOX-5631-1927-8502", "BLOX-8473-4195-2769",
+	"BLOX-1359-9842-5318", "BLOX-6924-2571-7096", "BLOX-3782-8419-4925", "BLOX-9506-3287-1641",
+	"BLOX-2417-7953-9384", "BLOX-5893-1604-6729", "BLOX-8152-4739-3017", "BLOX-1904-9268-5483",
+	"BLOX-6375-2810-8951", "BLOX-3246-7591-4105", "BLOX-9831-4072-1896", "BLOX-4519-8367-2738",
+	"BLOX-7082-3954-9621", "BLOX-2965-6173-5419", "BLOX-5748-1290-8376", "BLOX-8623-4815-3094",
+	"BLOX-1479-9532-6827", "BLOX-6951-2384-7153", "BLOX-3804-7926-4912", "BLOX-9172-4583-1609",
+	"BLOX-2597-8410-9365", "BLOX-5381-1762-6943", "BLOX-8749-3205-2857", "BLOX-1063-9854-5192",
+	"BLOX-6428-2971-7538", "BLOX-3915-7482-4069", "BLOX-9602-4137-1825", "BLOX-2759-8613-9471",
+	"BLOX-5837-1094-6284", "BLOX-8194-3725-2516", "BLOX-1325-9481-7903", "BLOX-6718-2593-8429",
+	"BLOX-3472-8105-5731", "BLOX-9241-4869-1058", "BLOX-2863-7354-9197", "BLOX-5908-1427-6832",
+	"BLOX-8539-3614-2745", "BLOX-1157-9032-5981", "BLOX-6892-2741-7364", "BLOX-3285-7963-4159",
+	"BLOX-9746-4308-1872", "BLOX-2491-8573-9268", "BLOX-5673-1942-6037", "BLOX-8315-4296-3809",
+	"BLOX-1928-9604-5714", "BLOX-6542-2837-7953", "BLOX-3759-8124-4681", "BLOX-9081-4572-1395",
+	"BLOX-2634-7915-9427", "BLOX-5819-1306-6752", "BLOX-8407-3951-2183", "BLOX-1592-9743-5068",
+	"BLOX-6385-2194-8926", "BLOX-3961-7428-4517", "BLOX-9274-4831-1605", "BLOX-2859-8073-9342",
+	"BLOX-5738-1925-6894", "BLOX-8146-3592-2731", "BLOX-1375-9861-5429", "BLOX-6903-2475-7186",
+	"BLOX-3582-8197-4053", "BLOX-9617-4329-1845", "BLOX-2748-7906-9231", "BLOX-5891-1634-6709",
+	"BLOX-8325-4176-2958", "BLOX-1094-9523-5817", "BLOX-6479-2851-7392", "BLOX-3927-7415-4608",
+	"BLOX-9153-4802-1764", "BLOX-2836-7941-9357", "BLOX-5712-1394-6825", "BLOX-8509-3627-2419",
+	"BLOX-1247-9058-5936", "BLOX-6831-2794-7152", "BLOX-3458-8126-4973", "BLOX-9725-4381-1609",
+	"BLOX-2593-7842-9318", "BLOX-5681-1973-6247", "BLOX-8394-4105-2863", "BLOX-1172-9548-5092",
+	"BLOX-6925-2381-7416", "BLOX-3819-7604-4532", "BLOX-9047-4291-1853", "BLOX-2764-7935-9108",
+	"BLOX-5832-1479-6951", "BLOX-8195-3742-2069", "BLOX-1308-9857-5421", "BLOX-6741-2963-7584",
+	"BLOX-3952-8174-4036", "BLOX-9618-4327-1945", "BLOX-2497-7813-9258", "BLOX-5739-1602-6841",
+	"BLOX-8264-4193-2759", "BLOX-1085-9472-5937", "BLOX-6823-2749-7105", "BLOX-3571-8926-4418",
+	"BLOX-9142-4837-1693", "BLOX-2857-7304-9526", "BLOX-5914-1283-6749", "BLOX-8372-4591-2018",
+	"BLOX-1469-9825-5371", "BLOX-6738-2195-7942", "BLOX-3847-7619-4253", "BLOX-9056-4382-1714",
+	"BLOX-2913-7485-9362", "BLOX-5821-1934-6079", "BLOX-8109-3756-2847", "BLOX-1573-9628-5904",
+	"BLOX-6942-2371-7856", "BLOX-3689-8145-4927", "BLOX-9275-4031-1589", "BLOX-2418-7963-9305",
+	"BLOX-5792-1847-6231", "BLOX-8351-4609-2748", "BLOX-1062-9583-5197", "BLOX-6859-2734-7412",
+	"BLOX-3924-7816-4509", "BLOX-9173-4295-1684", "BLOX-2841-7593-9326", "BLOX-5637-1904-6815",
+	"BLOX-8295-3741-2063", "BLOX-1382-9475-5921", "BLOX-6719-2853-7049", "BLOX-3594-8127-4638",
+	"BLOX-9627-4385-1902", "BLOX-2758-7941-9263", "BLOX-5813-1492-6754", "BLOX-8304-4179-2895",
+	"BLOX-1196-9532-5478", "BLOX-6928-2745-7316", "BLOX-3471-8902-4593", "BLOX-9158-4273-1864",
+	"BLOX-2839-7615-9347", "BLOX-5726-1938-6059", "BLOX-8147-3592-2736", "BLOX-1083-9625-5914",
+	"BLOX-6842-2791-7538", "BLOX-3956-8147-4029", "BLOX-9274-4831-1659", "BLOX-2591-7846-9307",
+	"BLOX-5682-1974-6239", "BLOX-8395-4102-2871", "BLOX-1173-9549-5082", "BLOX-6926-2382-7415",
+	"BLOX-3817-7605-4523", "BLOX-9048-4292-1854", "BLOX-2765-7936-9109", "BLOX-5833-1480-6952",
+	"BLOX-8196-3743-2070", "BLOX-1309-9858-5422", "BLOX-6742-2964-7585", "BLOX-3953-8175-4037",
+	"BLOX-9619-4328-1946", "BLOX-2498-7814-9259", "BLOX-5740-1603-6842", "BLOX-8265-4194-2760",
+	"BLOX-1086-9473-5938", "BLOX-6824-2750-7106", "BLOX-3572-8927-4419", "BLOX-9143-4838-1694",
+	"BLOX-2858-7305-9527", "BLOX-5915-1284-6750", "BLOX-8373-4592-2019", "BLOX-1470-9826-5372",
+	"BLOX-6739-2196-7943", "BLOX-3848-7620-4254", "BLOX-9057-4383-1715", "BLOX-2914-7486-9363",
+	"BLOX-5822-1935-6080", "BLOX-8110-3757-2848", "BLOX-1574-9629-5905", "BLOX-6943-2372-7857",
+	"BLOX-3690-8146-4928", "BLOX-9276-4032-1590", "BLOX-2419-7964-9306", "BLOX-5793-1848-6232",
+	"BLOX-8352-4610-2749", "BLOX-1063-9584-5198", "BLOX-6860-2735-7413", "BLOX-3925-7817-4510",
+	"BLOX-9174-4296-1685", "BLOX-2842-7594-9327", "BLOX-5638-1905-6816", "BLOX-8296-3742-2064",
+	"BLOX-1383-9476-5922", "BLOX-6720-2854-7050", "BLOX-3595-8128-4639", "BLOX-9628-4386-1903",
+	"BLOX-2759-7942-9264", "BLOX-5814-1493-6755", "BLOX-8305-4180-2896", "BLOX-1197-9533-5479",
+	"BLOX-6929-2746-7317", "BLOX-3472-8903-4594", "BLOX-9159-4274-1865", "BLOX-2840-7616-9348",
+	"BLOX-5727-1939-6060", "BLOX-8148-3593-2737", "BLOX-1084-9626-5915", "BLOX-6843-2792-7539",
+	"BLOX-3957-8148-4030", "BLOX-9275-4832-1660", "BLOX-2592-7847-9308", "BLOX-5683-1975-6240",
+	"BLOX-8396-4103-2872", "BLOX-1174-9550-5083", "BLOX-6927-2383-7416", "BLOX-3818-7606-4524",
+	"BLOX-9049-4293-1855", "BLOX-2766-7937-9110", "BLOX-5834-1481-6953", "BLOX-8197-3744-2071",
+	"BLOX-1310-9859-5423", "BLOX-6743-2965-7586", "BLOX-3954-8176-4038", "BLOX-9620-4329-1947",
+	"BLOX-2499-7815-9260", "BLOX-5741-1604-6843", "BLOX-8266-4195-2761", "BLOX-1087-9474-5939",
+	"BLOX-6825-2751-7107", "BLOX-3573-8928-4420", "BLOX-9144-4839-1695", "BLOX-2859-7306-9528",
+	"BLOX-5916-1285-6751", "BLOX-8374-4593-2020", "BLOX-1471-9827-5373", "BLOX-6740-2197-7944",
+	"BLOX-3849-7621-4255", "BLOX-9058-4384-1716", "BLOX-2915-7487-9364", "BLOX-5823-1936-6081",
+	"BLOX-8111-3758-2849", "BLOX-1575-9630-5906", "BLOX-6944-2373-7858", "BLOX-3691-8147-4929",
+	"BLOX-9277-4033-1591", "BLOX-2420-7965-9307", "BLOX-5794-1849-6233", "BLOX-8353-4611-2750",
+	"BLOX-1064-9585-5199", "BLOX-6861-2736-7414", "BLOX-3926-7818-4511", "BLOX-9175-4297-1686",
+	"BLOX-2843-7595-9328", "BLOX-5639-1906-6817", "BLOX-8297-3743-2065", "BLOX-1384-9477-5923",
+	"BLOX-6721-2855-7051", "BLOX-3596-8129-4640", "BLOX-9629-4387-1904", "BLOX-2760-7943-9265",
+	"BLOX-5815-1494-6756", "BLOX-8306-4181-2897", "BLOX-1198-9534-5480", "BLOX-6930-2747-7318",
+	"BLOX-3473-8904-4595", "BLOX-9160-4275-1866", "BLOX-2841-7617-9349", "BLOX-5728-1940-6061",
+	"BLOX-8149-3594-2738", "BLOX-1085-9627-5916", "BLOX-6844-2793-7540", "BLOX-3958-8149-4031",
+	"BLOX-9276-4833-1661", "BLOX-2593-7848-9309", "BLOX-5684-1976-6241", "BLOX-8397-4104-2873",
+	"BLOX-1175-9551-5084", "BLOX-6928-2384-7417", "BLOX-3819-7607-4525", "BLOX-9050-4294-1856",
+	"BLOX-2767-7938-9111", "BLOX-5835-1482-6954", "BLOX-8198-3745-2072", "BLOX-1311-9860-5424",
+	"BLOX-6744-2966-7587", "BLOX-3955-8177-4039", "BLOX-9621-4330-1948", "BLOX-2500-7816-9261",
+	"BLOX-5742-1605-6844", "BLOX-8267-4196-2762", "BLOX-1088-9475-5940", "BLOX-6826-2752-7108",
+	"BLOX-3574-8929-4421", "BLOX-9145-4840-1696", "BLOX-2860-7307-9529", "BLOX-5917-1286-6752",
+	"BLOX-8375-4594-2021", "BLOX-1472-9828-5374", "BLOX-6741-2198-7945", "BLOX-3850-7622-4256",
+	"BLOX-9059-4385-1717", "BLOX-2916-7488-9365", "BLOX-5824-1937-6082", "BLOX-8112-3759-2850",
+	"BLOX-1576-9631-5907", "BLOX-6945-2374-7859", "BLOX-3692-8148-4930", "BLOX-9278-4034-1592",
+	"BLOX-2421-7966-9308", "BLOX-5795-1850-6234", "BLOX-8354-4612-2751", "BLOX-1065-9586-5200",
+	"BLOX-6862-2737-7415", "BLOX-3927-7819-4512", "BLOX-9176-4298-1687", "BLOX-2844-7596-9329",
+	"BLOX-5640-1907-6818", "BLOX-8298-3744-2066", "BLOX-1385-9478-5924", "BLOX-6722-2856-7052",
+	"BLOX-3597-8130-4641", "BLOX-9630-4388-1905", "BLOX-2761-7944-9266", "BLOX-5816-1495-6757",
+	"BLOX-8307-4182-2898", "BLOX-1199-9535-5481", "BLOX-6931-2748-7319", "BLOX-3474-8905-4596",
+	"BLOX-9161-4276-1867", "BLOX-2842-7618-9350", "BLOX-5729-1941-6062", "BLOX-8150-3595-2739",
+	"BLOX-1086-9628-5917", "BLOX-6845-2794-7541", "BLOX-3959-8150-4032", "BLOX-9277-4834-1662",
+	"BLOX-2594-7849-9310", "BLOX-5685-1977-6242", "BLOX-8398-4105-2874", "BLOX-1176-9552-5085",
+	"BLOX-6929-2385-7418", "BLOX-3820-7608-4526", "BLOX-9051-4295-1857", "BLOX-2768-7939-9112",
+	"BLOX-5836-1483-6955", "BLOX-8199-3746-2073", "BLOX-1312-9861-5425", "BLOX-6745-2967-7588",
+	"BLOX-3956-8178-4040", "BLOX-9622-4331-1949", "BLOX-2501-7817-9262", "BLOX-5743-1606-6845",
+	"BLOX-8268-4197-2763", "BLOX-1089-9476-5941", "BLOX-6827-2753-7109", "BLOX-3575-8930-4422",
+	"BLOX-9146-4841-1697", "BLOX-2861-7308-9530", "BLOX-5918-1287-6753", "BLOX-8376-4595-2022",
+	"BLOX-1473-9829-5375", "BLOX-6742-2199-7946", "BLOX-3851-7623-4257", "BLOX-9060-4386-1718",
+	"BLOX-2917-7489-9366", "BLOX-5825-1938-6083", "BLOX-8113-3760-2851", "BLOX-1577-9632-5908",
+	"BLOX-6946-2375-7860", "BLOX-3693-8149-4931", "BLOX-9279-4035-1593", "BLOX-2422-7967-9309",
+	"BLOX-5796-1851-6235", "BLOX-8355-4613-2752", "BLOX-1066-9587-5201", "BLOX-6863-2738-7416",
+	"BLOX-3928-7820-4513", "BLOX-9177-4299-1688", "BLOX-2845-7597-9330", "BLOX-5641-1908-6819",
+	"BLOX-8299-3745-2067", "BLOX-1386-9479-5925", "BLOX-6723-2857-7053", "BLOX-3598-8131-4642",
+	"BLOX-9631-4389-1906", "BLOX-2762-7945-9267", "BLOX-5817-1496-6758", "BLOX-8308-4183-2899",
+	"BLOX-1200-9536-5482", "BLOX-4729-1853-6041", "BLOX-8154-3927-5068", "BLOX-1093-7482-9516",
+	"BLOX-6382-5194-2703", "BLOX-9571-2806-4395", "BLOX-3948-7152-8027", "BLOX-7205-4931-1684",
+	"BLOX-2816-9573-3409", "BLOX-5493-1728-6152", "BLOX-8731-4095-2867", "BLOX-1957-8302-5419",
+	"BLOX-6284-3175-9043", "BLOX-9102-5836-2741", "BLOX-3579-2418-6905", "BLOX-7846-9153-4028",
+	"BLOX-2935-6071-8514", "BLOX-5168-1942-7396", "BLOX-8427-3605-1859", "BLOX-1739-5284-9062",
+	"BLOX-6051-8917-3428", "BLOX-9318-2574-6803", "BLOX-4285-7193-1057", "BLOX-7592-1846-3920",
+	"BLOX-2674-9305-5189", "BLOX-5913-4728-8061", "BLOX-8245-1073-6392", "BLOX-1396-8527-4105",
+	"BLOX-6702-3951-9834", "BLOX-9481-5263-2718", "BLOX-3159-7408-6925", "BLOX-7924-1835-4069",
+	"BLOX-2807-9514-3726", "BLOX-5631-4298-8157", "BLOX-8352-1976-6043", "BLOX-1478-8392-5201",
+	"BLOX-6915-3704-9826", "BLOX-9247-5183-2695", "BLOX-3856-7029-1438", "BLOX-7194-2581-6307",
+	"BLOX-2743-9615-4852", "BLOX-5082-1739-8964", "BLOX-8619-4275-3108", "BLOX-1935-8462-5729",
+	"BLOX-6428-3197-9051", "BLOX-9753-2846-6139", "BLOX-3291-7508-1964", "BLOX-7805-1392-4581",
+	"BLOX-2517-9834-6209", "BLOX-5374-4128-8903", "BLOX-8926-1753-3047", "BLOX-1649-8512-7395",
+	"BLOX-6182-3947-2058", "BLOX-9504-5271-6813", "BLOX-3725-7196-1482", "BLOX-7418-2805-9367",
+	"BLOX-2963-9518-4730", "BLOX-5841-1072-8259", "BLOX-8176-4395-3602", "BLOX-1358-8927-5149",
+	"BLOX-6804-3719-9285", "BLOX-9137-5482-2604", "BLOX-3592-7261-1978", "BLOX-7945-1836-4029",
+	"BLOX-2819-9603-5741", "BLOX-5607-4192-8315", "BLOX-8491-1758-6023", "BLOX-1728-8405-3961",
+	"BLOX-6359-2874-9106", "BLOX-9274-5189-2437", "BLOX-3916-7042-1853", "BLOX-7583-2915-6304",
+	"BLOX-2409-9731-5826", "BLOX-5197-4382-8069", "BLOX-8734-1659-3291", "BLOX-1058-8924-7413",
+	"BLOX-6925-3708-9152", "BLOX-9416-5273-2849", "BLOX-3827-7195-1604", "BLOX-7294-2587-6031",
+	"BLOX-2759-9614-4982", "BLOX-5481-1936-8725", "BLOX-8103-4296-3517", "BLOX-1692-8541-5073",
+	"BLOX-6738-3195-9204", "BLOX-9057-5824-2638", "BLOX-3429-7916-1850", "BLOX-7851-1349-4092",
+	"BLOX-2904-9753-6187", "BLOX-5268-4109-8394", "BLOX-8572-1638-3925", "BLOX-1493-8726-5108",
+	"BLOX-6815-3492-9071", "BLOX-9326-5184-2759", "BLOX-3741-7025-1896", "BLOX-7158-2934-6405",
+	"BLOX-2689-9571-4832", "BLOX-5973-1825-8146", "BLOX-8247-4309-3618", "BLOX-1369-8952-5047",
+	"BLOX-6902-3715-9284", "BLOX-9148-5637-2901", "BLOX-3574-7289-1653", "BLOX-7936-1825-4079",
+	"BLOX-2841-9607-5312", "BLOX-5692-4183-8057", "BLOX-8415-1796-3920", "BLOX-1753-8429-6104",
+	"BLOX-6391-2847-9518", "BLOX-9265-5173-2049", "BLOX-3942-7168-1835", "BLOX-7508-2941-6372",
+	"BLOX-2473-9716-4859", "BLOX-5182-4395-8026", "BLOX-8791-1604-3572", "BLOX-1047-8935-7261",
+	"BLOX-6952-3748-9103", "BLOX-9417-5286-2593", "BLOX-3805-7192-1649", "BLOX-7283-2591-6074",
+	"BLOX-2794-9635-4817", "BLOX-5409-1972-8361", "BLOX-8195-4263-3058", "BLOX-1637-8594-5129",
+	"BLOX-6724-3189-9406", "BLOX-9083-5741-2615", "BLOX-3491-7925-1870", "BLOX-7862-1358-4091",
+	"BLOX-2957-9742-6103", "BLOX-5284-4179-8396", "BLOX-8519-1647-3902", "BLOX-1482-8735-5069",
+	"BLOX-6831-3409-9275", "BLOX-9305-5192-2748", "BLOX-3759-7041-1826", "BLOX-7184-2953-6317",
+	"BLOX-2695-9582-4803", "BLOX-5961-1837-8154", "BLOX-8259-4317-3692", "BLOX-1378-8941-5028",
+	"BLOX-6914-3729-9165", "BLOX-9153-5648-2937", "BLOX-3582-7291-1609", "BLOX-7942-1839-4065",
+	"BLOX-2853-9614-5370", "BLOX-5684-4195-8032", "BLOX-8427-1783-3951", "BLOX-1769-8412-6138",
+	"BLOX-6382-2859-9504", "BLOX-9274-5168-2037", "BLOX-3951-7184-1862", "BLOX-7519-2937-6348",
+	"BLOX-2481-9725-4891", "BLOX-5196-4382-8073", "BLOX-8743-1619-3528", "BLOX-1059-8927-7246",
+	"BLOX-6941-3759-9132", "BLOX-9408-5291-2574", "BLOX-3816-7183-1695", "BLOX-7295-2584-6013",
+	"BLOX-2783-9624-4851", "BLOX-5418-1963-8392", "BLOX-8174-4259-3067", "BLOX-1629-8583-5147",
+	"BLOX-6735-3192-9418", "BLOX-9074-5739-2608", "BLOX-3482-7916-1857", "BLOX-7853-1369-4082",
+	"BLOX-2941-9753-6194", "BLOX-5273-4168-8375", "BLOX-8509-1653-3914", "BLOX-1473-8726-5093",
+	"BLOX-6824-3418-9261", "BLOX-9317-5184-2739", "BLOX-3748-7032-1895", "BLOX-7169-2947-6305",
+	"BLOX-2684-9573-4829", "BLOX-5952-1846-8137", "BLOX-8261-4305-3689", "BLOX-1385-8932-5041",
+	"BLOX-6903-3718-9274", "BLOX-9147-5639-2918", "BLOX-3573-7284-1691", "BLOX-7935-1827-4074",
+	"BLOX-2849-9603-5361", "BLOX-5673-4182-8049", "BLOX-8416-1795-3928", "BLOX-1758-8427-6109",
+	"BLOX-6392-2841-9517", "BLOX-9264-5179-2048", "BLOX-3948-7162-1839", "BLOX-7507-2948-6371",
+	"BLOX-2479-9713-4857", "BLOX-5189-4392-8025", "BLOX-8792-1605-3579", "BLOX-1049-8931-7268",
+	"BLOX-6953-3742-9108", "BLOX-9419-5283-2591", "BLOX-3807-7194-1648", "BLOX-7281-2593-6072",
+	"BLOX-2792-9634-4816", "BLOX-5408-1974-8369", "BLOX-8194-4261-3057", "BLOX-1639-8592-5128",
+	"BLOX-6725-3187-9405", "BLOX-9082-5742-2614", "BLOX-3493-7924-1879", "BLOX-7861-1357-4093",
+	"BLOX-2958-9741-6104", "BLOX-5282-4178-8395", "BLOX-8518-1649-3903", "BLOX-1483-8734-5068",
+	"BLOX-6832-3408-9274", "BLOX-9304-5191-2747", "BLOX-3758-7042-1825", "BLOX-7183-2952-6316",
+	"BLOX-2694-9581-4802", "BLOX-5962-1836-8153", "BLOX-8258-4316-3691", "BLOX-1379-8942-5027",
+	"BLOX-6915-3728-9164", "BLOX-9152-5647-2936", "BLOX-3581-7292-1608", "BLOX-7941-1838-4064",
+	"BLOX-2852-9613-5371", "BLOX-5683-4194-8031", "BLOX-8426-1782-3950", "BLOX-1768-8411-6137",
+	"BLOX-6381-2858-9503", "BLOX-9273-5167-2036", "BLOX-3950-7182-1861", "BLOX-7518-2936-6347",
+	"BLOX-2480-9724-4890", "BLOX-5195-4381-8072", "BLOX-8742-1618-3527", "BLOX-1058-8926-7245",
+	"BLOX-6940-3758-9131", "BLOX-9407-5290-2573", "BLOX-3815-7182-1694", "BLOX-7294-2583-6012",
+	"BLOX-2782-9623-4850", "BLOX-5417-1962-8391", "BLOX-8173-4258-3066", "BLOX-1628-8582-5146",
+	"BLOX-6734-3191-9417", "BLOX-9073-5738-2607", "BLOX-3481-7915-1856", "BLOX-7852-1368-4081",
+	"BLOX-2940-9752-6193", "BLOX-5272-4167-8374", "BLOX-8508-1652-3913", "BLOX-1472-8725-5092",
+	"BLOX-6823-3417-9260", "BLOX-9316-5183-2738", "BLOX-3747-7031-1894", "BLOX-7168-2946-6304",
+	"BLOX-2683-9572-4828", "BLOX-5951-1845-8136", "BLOX-8260-4304-3688", "BLOX-1384-8931-5040",
+	"BLOX-6902-3717-9273", "BLOX-9146-5638-2917", "BLOX-3572-7283-1690", "BLOX-7934-1826-4073",
+	"BLOX-2848-9602-5360", "BLOX-5672-4181-8048", "BLOX-8415-1794-3927", "BLOX-1757-8426-6108",
+	"BLOX-6391-2840-9516", "BLOX-9263-5178-2047", "BLOX-3947-7161-1838", "BLOX-7506-2947-6370",
+	"BLOX-2478-9712-4856", "BLOX-5188-4391-8024", "BLOX-8791-1604-3578", "BLOX-1048-8930-7267",
+	"BLOX-6952-3741-9107", "BLOX-9418-5282-2590", "BLOX-3806-7193-1647", "BLOX-7280-2592-6071",
+	"BLOX-2791-9633-4815", "BLOX-5407-1973-8368", "BLOX-8193-4260-3056", "BLOX-1638-8591-5127",
+	"BLOX-6724-3186-9404", "BLOX-9081-5741-2613", "BLOX-3492-7923-1878", "BLOX-7860-1356-4092",
+	"BLOX-2957-9740-6103", "BLOX-5281-4177-8394", "BLOX-8517-1648-3902", "BLOX-1482-8733-5067",
+	"BLOX-6831-3407-9273", "BLOX-9303-5190-2746", "BLOX-3757-7041-1824", "BLOX-7182-2951-6315",
+	"BLOX-2693-9580-4801", "BLOX-5961-1835-8152", "BLOX-8257-4315-3690", "BLOX-1378-8941-5026",
+	"BLOX-6914-3727-9163", "BLOX-9151-5646-2935", "BLOX-3580-7291-1607", "BLOX-7940-1837-4063",
+	"BLOX-2851-9612-5370", "BLOX-5682-4193-8030", "BLOX-8425-1781-3949", "BLOX-1757-8410-6136",
+	"BLOX-6380-2857-9502", "BLOX-9272-5166-2035", "BLOX-3946-7181-1860", "BLOX-7517-2935-6346",
+	"BLOX-2479-9723-4889", "BLOX-5194-4380-8071", "BLOX-8741-1617-3526", "BLOX-1057-8925-7244",
+	"BLOX-6939-3757-9130", "BLOX-9406-5289-2572", "BLOX-3814-7181-1693", "BLOX-7293-2582-6011",
+	"BLOX-2781-9622-4849", "BLOX-5416-1961-8390", "BLOX-8172-4257-3065", "BLOX-1627-8581-5145",
+	"BLOX-6733-3190-9416", "BLOX-9072-5737-2606", "BLOX-3480-7914-1855", "BLOX-7851-1367-4080",
+	"BLOX-2939-9751-6192", "BLOX-5271-4166-8373", "BLOX-8507-1651-3912", "BLOX-1471-8724-5091",
+	"BLOX-6822-3416-9259", "BLOX-9315-5182-2737", "BLOX-3746-7030-1893", "BLOX-7167-2945-6303",
+	"BLOX-2682-9571-4827", "BLOX-5950-1844-8135", "BLOX-8259-4303-3687", "BLOX-1383-8930-5039",
+	"BLOX-6901-3716-9272", "BLOX-9145-5637-2916", "BLOX-3571-7282-1689", "BLOX-7933-1825-4072",
+	"BLOX-2847-9601-5359", "BLOX-5671-4180-8047", "BLOX-8414-1793-3926", "BLOX-1756-8425-6107",
+	"BLOX-6390-2839-9515", "BLOX-9262-5177-2046", "BLOX-3945-7160-1837", "BLOX-7505-2946-6369",
+	"BLOX-2477-9711-4855", "BLOX-5187-4390-8023", "BLOX-8790-1603-3577", "BLOX-1047-8929-7266",
+	"BLOX-6951-3740-9106", "BLOX-9417-5281-2589", "BLOX-3805-7192-1646", "BLOX-7279-2591-6070",
+	"BLOX-2790-9632-4814", "BLOX-5406-1972-8367", "BLOX-8192-4259-3055", "BLOX-1637-8590-5126",
+	"BLOX-6723-3185-9403", "BLOX-9080-5740-2612", "BLOX-3491-7922-1877", "BLOX-7859-1355-4091",
+	"BLOX-2956-9739-6102", "BLOX-5280-4176-8393", "BLOX-8516-1647-3901", "BLOX-1481-8732-5066",
+	"BLOX-6830-3406-9272", "BLOX-9302-5189-2745", "BLOX-3756-7040-1823", "BLOX-7181-2950-6314",
+	"BLOX-2692-9579-4800", "BLOX-5960-1834-8151", "BLOX-8256-4314-3689", "BLOX-1377-8940-5025",
+	"BLOX-6913-3726-9162", "BLOX-9150-5645-2934", "BLOX-3579-7290-1606", "BLOX-7939-1836-4062",
+	"BLOX-2850-9611-5369", "BLOX-5681-4192-8029", "BLOX-8424-1780-3948", "BLOX-1756-8409-6135",
+	"BLOX-6379-2856-9501", "BLOX-9271-5165-2034", "BLOX-3944-7180-1859", "BLOX-7516-2934-6345",
+	"BLOX-2478-9722-4888", "BLOX-5193-4379-8070", "BLOX-8740-1616-3525", "BLOX-1056-8924-7243",
+	"BLOX-6938-3756-9129", "BLOX-9405-5288-2571", "BLOX-3813-7180-1692", "BLOX-7292-2581-6010",
+	"BLOX-2780-9621-4848", "BLOX-5415-1960-8389", "BLOX-8171-4256-3064", "BLOX-1626-8580-5144",
+	"BLOX-6732-3189-9415", "BLOX-9071-5736-2605", "BLOX-3479-7913-1854", "BLOX-7850-1366-4079",
+	"BLOX-2938-9750-6191", "BLOX-5270-4165-8372", "BLOX-8506-1650-3911", "BLOX-1470-8723-5090",
+	"BLOX-6821-3415-9258", "BLOX-9314-5181-2736", "BLOX-3745-7029-1892", "BLOX-7166-2944-6302",
+	"BLOX-2681-9570-4826", "BLOX-5949-1843-8134", "BLOX-8258-4302-3686", "BLOX-1382-8929-5038",
+	"BLOX-6900-3715-9271", "BLOX-9144-5636-2915", "BLOX-3570-7281-1688", "BLOX-7932-1824-4071",
+	"BLOX-2846-9600-5358", "BLOX-5670-4179-8046", "BLOX-8413-1792-3925", "BLOX-1755-8424-6106",
+	"BLOX-6389-2838-9514", "BLOX-9261-5176-2045", "BLOX-3944-7159-1836", "BLOX-7504-2945-6368",
+	"BLOX-2476-9710-4854", "BLOX-5186-4389-8022", "BLOX-8789-1602-3576", "BLOX-1046-8928-7265",
+	"BLOX-6950-3739-9105", "BLOX-9416-5280-2588", "BLOX-3804-7191-1645", "BLOX-7278-2590-6069",
+	"BLOX-2789-9631-4813", "BLOX-5405-1971-8366", "BLOX-8191-4258-3054", "BLOX-1636-8589-5125",
+	"BLOX-6722-3184-9402", "BLOX-9079-5739-2611", "BLOX-3490-7921-1876", "BLOX-7858-1354-4090",
+	"BLOX-2955-9738-6101", "BLOX-5279-4175-8392", "BLOX-8515-1646-3900", "BLOX-1480-8731-5065",
+	"BLOX-6829-3405-9271", "BLOX-9301-5188-2744", "BLOX-3755-7039-1822", "BLOX-7180-2949-6313",
+	"BLOX-2691-9578-4799", "BLOX-5959-1833-8150", "BLOX-8255-4313-3688", "BLOX-1376-8939-5024",
+	"BLOX-6912-3725-9161", "BLOX-9149-5644-2933", "BLOX-3578-7289-1605", "BLOX-7938-1835-4061",
+	"BLOX-2849-9610-5368", "BLOX-5680-4191-8028", "BLOX-8423-1779-3947", "BLOX-1755-8408-6134",
+	"BLOX-6378-2855-9500", "BLOX-9270-5164-2033", "BLOX-3943-7179-1858", "BLOX-7515-2933-6344",
+	"BLOX-2477-9721-4887", "BLOX-5192-4378-8069", "BLOX-8739-1615-3524", "BLOX-1055-8923-7242",
+	"BLOX-6937-3755-9128", "BLOX-9404-5287-2570", "BLOX-3812-7179-1691", "BLOX-7291-2580-6009",
+	"BLOX-2779-9620-4847", "BLOX-5414-1959-8388", "BLOX-8170-4255-3063", "BLOX-1625-8579-5143",
+	"BLOX-6731-3188-9414", "BLOX-9070-5735-2604", "BLOX-3478-7912-1853", "BLOX-7849-1365-4078",
+	"BLOX-2937-9749-6190", "BLOX-5269-4164-8371", "BLOX-8505-1649-3910", "BLOX-1469-8722-5089",
+	"BLOX-6820-3414-9257", "BLOX-9313-5180-2735", "BLOX-3744-7028-1891", "BLOX-7165-2943-6301",
+	"BLOX-2680-9569-4825", "BLOX-5948-1842-8133", "BLOX-8257-4301-3685", "BLOX-1381-8928-5037",
+	"BLOX-6899-3714-9270", "BLOX-9143-5635-2914", "BLOX-3569-7280-1687", "BLOX-7931-1823-4070",
+	"BLOX-2845-9599-5357", "BLOX-5669-4178-8045", "BLOX-8412-1791-3924", "BLOX-1754-8423-6105",
+	"BLOX-6388-2837-9513", "BLOX-9260-5175-2044", "BLOX-3943-7158-1835", "BLOX-7503-2944-6367",
+	"BLOX-2475-9709-4853", "BLOX-5185-4388-8021", "BLOX-8788-1601-3575", "BLOX-1045-8927-7264",
+	"BLOX-6949-3738-9104", "BLOX-9415-5279-2587", "BLOX-3803-7190-1644", "BLOX-7277-2589-6068",
+	"BLOX-2788-9630-4812", "BLOX-5404-1970-8365", "BLOX-8190-4257-3053", "BLOX-1635-8588-5124",
+	"BLOX-6721-3183-9401", "BLOX-9078-5738-2610", "BLOX-3489-7920-1875", "BLOX-7857-1353-4089",
+	"BLOX-2954-9737-6100", "BLOX-5278-4174-8391", "BLOX-8514-1645-3899", "BLOX-1479-8730-5064",
+	"BLOX-6828-3404-9270", "BLOX-9300-5187-2743", "BLOX-3754-7038-1821", "BLOX-7179-2948-6312",
+	"BLOX-2690-9577-4798", "BLOX-5958-1832-8149", "BLOX-8254-4312-3687", "BLOX-1375-8938-5023",
+	"BLOX-6911-3724-9160", "BLOX-9148-5643-2932", "BLOX-3577-7288-1604", "BLOX-7937-1834-4060",
+	"BLOX-2848-9609-5367", "BLOX-5679-4190-8027", "BLOX-8422-1778-3946", "BLOX-1754-8407-6133",
+	"BLOX-6377-2854-9499", "BLOX-9269-5163-2032", "BLOX-3942-7178-1857", "BLOX-7514-2932-6343",
+	"BLOX-2476-9720-4886", "BLOX-5191-4377-8068", "BLOX-8738-1614-3523", "BLOX-1054-8922-7241",
+	"BLOX-6936-3754-9127", "BLOX-9403-5286-2569", "BLOX-3811-7178-1690", "BLOX-7290-2579-6008",
+	"BLOX-2778-9619-4846", "BLOX-5413-1958-8387", "BLOX-8169-4254-3062", "BLOX-1624-8578-5142",
+	"BLOX-6730-3187-9413", "BLOX-9069-5734-2603", "BLOX-3477-7911-1852", "BLOX-7848-1364-4077",
+	"BLOX-2936-9748-6189", "BLOX-5268-4163-8370", "BLOX-8504-1648-3909", "BLOX-1468-8721-5088",
+	"BLOX-6819-3413-9256", "BLOX-9312-5179-2734", "BLOX-3743-7027-1890", "BLOX-7164-2942-6300",
+	"BLOX-2679-9568-4824", "BLOX-5947-1841-8132", "BLOX-8256-4300-3684", "BLOX-1380-8927-5036",
+	"BLOX-6898-3713-9269", "BLOX-9142-5634-2913", "BLOX-3568-7279-1686", "BLOX-7930-1822-4069",
+	"BLOX-2844-9598-5356", "BLOX-5668-4177-8044", "BLOX-8411-1790-3923", "BLOX-1753-8422-6104",
+	"BLOX-6387-2836-9512", "BLOX-9259-5174-2043", "BLOX-3942-7157-1834", "BLOX-7502-2943-6366",
+	"BLOX-2474-9708-4852", "BLOX-5184-4387-8020", "BLOX-8787-1600-3574", "BLOX-1044-8926-7263",
+	"BLOX-6948-3737-9103", "BLOX-9414-5278-2586", "BLOX-3802-7189-1643", "BLOX-7276-2588-6067",
+	"BLOX-2787-9629-4811", "BLOX-5403-1969-8364", "BLOX-8189-4256-3052", "BLOX-1634-8587-5123",
+	"BLOX-6720-3182-9400", "BLOX-9077-5737-2609", "BLOX-3488-7919-1874", "BLOX-7856-1352-4088",
+	"BLOX-2953-9736-6099", "BLOX-5277-4173-8390", "BLOX-8513-1644-3898", "BLOX-1478-8729-5063",
+	"BLOX-6827-3403-9269", "BLOX-9299-5186-2742", "BLOX-3753-7037-1820", "BLOX-7178-2947-6311",
+	"BLOX-2689-9576-4797", "BLOX-5957-1831-8148", "BLOX-8253-4311-3686", "BLOX-1374-8937-5022",
+	"BLOX-6910-3723-9159", "BLOX-9147-5642-2931", "BLOX-3576-7287-1603", "BLOX-7936-1833-4059",
+	"BLOX-2847-9608-5366", "BLOX-5678-4189-8026", "BLOX-8421-1777-3945", "BLOX-1753-8406-6132",
+	"BLOX-6376"
+}
+
+local adminKey = "ADMIN123!"
+local keyLink = "https://www.tiktok.com/@lon12317"
+
+local keyOk = false
+local isAdmin = false
+local isProcessing = false
+
+-- Hàm lấy key theo ngày
+local function GetDailyKey()
+	local daySeed = math.floor(os.time() / 86400)
+	math.randomseed(daySeed)
+	local index = math.random(1, #validKeys)
+	local dailyKey = validKeys[index]
+	math.randomseed(os.time())
+	return dailyKey
+end
+
+-- Hàm kiểm tra key hợp lệ
+local function IsValidKey(inputKey)
+	local currentKey = GetDailyKey()
+	if inputKey == currentKey then return true end
+	
+	local yesterdaySeed = math.floor(os.time() / 86400) - 1
+	math.randomseed(yesterdaySeed)
+	local yesterdayIndex = math.random(1, #validKeys)
+	local yesterdayKey = validKeys[yesterdayIndex]
+	math.randomseed(os.time())
+	
+	if inputKey == yesterdayKey then
+		local secondsIntoDay = os.time() % 86400
+		if secondsIntoDay < 3600 then return true end
+	end
+	return false
+end
+
+-- Services
+local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+-- =============================================
+-- GIAO DIỆN NHẬP KEY CHÍNH (ẨN KEY)
+-- =============================================
+if CoreGui:FindFirstChild("LongRedzKeySystem") then CoreGui["LongRedzKeySystem"]:Destroy() end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "LongRedzKeySystem"
+ScreenGui.Parent = CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Frame.Size = UDim2.new(0, 360, 0, 370)
+Frame.Position = UDim2.new(0.5, -180, 0.5, -185)
+Frame.BorderSizePixel = 0
+
+local FrameCorner = Instance.new("UICorner")
+FrameCorner.CornerRadius = UDim.new(0, 16)
+FrameCorner.Parent = Frame
+
+local MenuStroke = Instance.new("UIStroke")
+MenuStroke.Thickness = 2
+MenuStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+MenuStroke.Parent = Frame
+
+coroutine.wrap(function()
+	while task.wait() do
+		MenuStroke.Color = Color3.fromHSV((tick() * 0.2) % 1, 1, 1)
+	end
+end)()
+
+-- Logo
+local LogoLabel = Instance.new("TextLabel")
+LogoLabel.Parent = Frame
+LogoLabel.Size = UDim2.new(1, 0, 0, 50)
+LogoLabel.Position = UDim2.new(0, 0, 0, 10)
+LogoLabel.BackgroundTransparency = 1
+LogoLabel.ZIndex = 2
+LogoLabel.RichText = true
+LogoLabel.Text = '<i>LONG <font color="rgb(255, 20, 20)">REDZ</font></i>'
+LogoLabel.Font = Enum.Font.Michroma
+LogoLabel.TextSize = 36
+LogoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+LogoLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+local LogoStroke = Instance.new("UIStroke")
+LogoStroke.Thickness = 2
+LogoStroke.Color = Color3.fromRGB(0, 0, 0)
+LogoStroke.Parent = LogoLabel
+
+-- Key display - ẨN KEY, chỉ hiện thông báo
+local KeyDisplay = Instance.new("TextLabel")
+KeyDisplay.Parent = Frame
+KeyDisplay.Size = UDim2.new(0.9, 0, 0, 32)
+KeyDisplay.Position = UDim2.new(0.05, 0, 0, 65)
+KeyDisplay.BackgroundTransparency = 1
+KeyDisplay.ZIndex = 2
+KeyDisplay.Font = Enum.Font.SourceSansBold
+KeyDisplay.TextSize = 11
+KeyDisplay.TextColor3 = Color3.fromRGB(255, 200, 50)
+KeyDisplay.TextXAlignment = Enum.TextXAlignment.Center
+KeyDisplay.Text = "🔐 Key được ẩn - Bấm GET KEY để lấy"
+
+coroutine.wrap(function()
+	while task.wait(1) do
+		local secondsLeft = 86400 - (os.time() % 86400)
+		local hoursLeft = math.floor(secondsLeft / 3600)
+		local minutesLeft = math.floor((secondsLeft % 3600) / 60)
+		KeyDisplay.Text = "🔐 Key được ẩn - Bấm GET KEY để lấy\n⏳ Key đổi sau: " .. hoursLeft .. "h " .. minutesLeft .. "m"
+	end
+end)()
+
+-- Input
+local InputFrame = Instance.new("Frame")
+InputFrame.Parent = Frame
+InputFrame.Size = UDim2.new(0.9, 0, 0, 32)
+InputFrame.Position = UDim2.new(0.05, 0, 0, 112)
+InputFrame.BackgroundTransparency = 1
+InputFrame.ZIndex = 2
+
+local LineBottom = Instance.new("Frame")
+LineBottom.Parent = InputFrame
+LineBottom.Size = UDim2.new(1, 0, 0, 2)
+LineBottom.Position = UDim2.new(0, 0, 1, 0)
+LineBottom.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+LineBottom.BorderSizePixel = 0
+
+local TitleInput = Instance.new("TextLabel")
+TitleInput.Parent = InputFrame
+TitleInput.Text = "ENTER KEY HERE"
+TitleInput.Font = Enum.Font.SourceSansBold
+TitleInput.TextSize = 13
+TitleInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleInput.Size = UDim2.new(0.4, 0, 1, 0)
+TitleInput.TextXAlignment = Enum.TextXAlignment.Left
+TitleInput.BackgroundTransparency = 1
+
+local TextBox = Instance.new("TextBox")
+TextBox.Parent = InputFrame
+TextBox.PlaceholderText = "..."
+TextBox.Font = Enum.Font.SourceSansBold
+TextBox.TextSize = 14
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+TextBox.Size = UDim2.new(0.6, 0, 1, 0)
+TextBox.Position = UDim2.new(0.4, 0, 0, 0)
+TextBox.TextXAlignment = Enum.TextXAlignment.Right
+TextBox.BackgroundTransparency = 1
+TextBox.ClearTextOnFocus = false
+
+-- Nút GET KEY
+local GetKeyButton = Instance.new("TextButton")
+GetKeyButton.Parent = Frame
+GetKeyButton.Text = "GET KEY"
+GetKeyButton.Font = Enum.Font.SourceSansBold
+GetKeyButton.TextSize = 13
+GetKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyButton.Size = UDim2.new(0.9, 0, 0, 34)
+GetKeyButton.Position = UDim2.new(0.05, 0, 0, 158)
+GetKeyButton.BackgroundColor3 = Color3.fromRGB(195, 20, 20)
+GetKeyButton.BorderSizePixel = 0
+GetKeyButton.ZIndex = 2
+Instance.new("UICorner", GetKeyButton).CornerRadius = UDim.new(0, 8)
+
+-- Nút SUBMIT
+local CheckButton = Instance.new("TextButton")
+CheckButton.Parent = Frame
+CheckButton.Text = "SUBMIT KEY"
+CheckButton.Font = Enum.Font.SourceSansBold
+CheckButton.TextSize = 13
+CheckButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckButton.Size = UDim2.new(0.9, 0, 0, 34)
+CheckButton.Position = UDim2.new(0.05, 0, 0, 202)
+CheckButton.BackgroundColor3 = Color3.fromRGB(195, 20, 20)
+CheckButton.BorderSizePixel = 0
+CheckButton.ZIndex = 2
+Instance.new("UICorner", CheckButton).CornerRadius = UDim.new(0, 8)
+
+-- Credit
+local CreditLabel = Instance.new("TextLabel")
+CreditLabel.Parent = Frame
+CreditLabel.Size = UDim2.new(1, 0, 0, 20)
+CreditLabel.Position = UDim2.new(0, 0, 0, 252)
+CreditLabel.BackgroundTransparency = 1
+CreditLabel.Text = '<font color="rgb(255,20,20)">REDZ</font> @lon12317 | TIKTOK'
+CreditLabel.RichText = true
+CreditLabel.Font = Enum.Font.SourceSansBold
+CreditLabel.TextSize = 13
+CreditLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+CreditLabel.TextXAlignment = Enum.TextXAlignment.Center
+CreditLabel.ZIndex = 2
+
+-- Nút phụ
+local SupportButton = Instance.new("TextButton")
+SupportButton.Parent = Frame
+SupportButton.Text = "SUPPORT US"
+SupportButton.Font = Enum.Font.SourceSansBold
+SupportButton.TextSize = 12
+SupportButton.TextColor3 = Color3.fromRGB(255, 20, 20)
+SupportButton.Size = UDim2.new(0.42, 0, 0, 24)
+SupportButton.Position = UDim2.new(0.05, 0, 0, 278)
+SupportButton.BackgroundTransparency = 1
+SupportButton.BorderSizePixel = 0
+SupportButton.TextXAlignment = Enum.TextXAlignment.Center
+SupportButton.ZIndex = 2
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = Frame
+CloseButton.Text = "CLOSE UI"
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.TextSize = 12
+CloseButton.TextColor3 = Color3.fromRGB(255, 20, 20)
+CloseButton.Size = UDim2.new(0.42, 0, 0, 24)
+CloseButton.Position = UDim2.new(0.53, 0, 0, 278)
+CloseButton.BackgroundTransparency = 1
+CloseButton.BorderSizePixel = 0
+CloseButton.TextXAlignment = Enum.TextXAlignment.Center
+CloseButton.ZIndex = 2
+
+-- Kéo thả
+local UIS = game:GetService("UserInputService")
+local dragging, dragStart, startPos
+
+Frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Frame.Position
+	end
+end)
+
+UIS.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		local delta = input.Position - dragStart
+		Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+	ScreenGui:Destroy()
+	keyOk = false
+end)
+
+SupportButton.MouseButton1Click:Connect(function()
+	setclipboard(keyLink)
+	game.StarterGui:SetCore("SendNotification", {Title = "Long Redz Support"; Text = "Đã copy link mạng xã hội!"; Duration = 3})
+end)
+
+-- =============================================
+-- MENU THIÊN HÀ 3D + LẤY KEY VỚI THỜI GIAN CHỜ
+-- =============================================
+local function CreateRainbowMenu()
+	local currentKey = GetDailyKey()
+	local isWaiting = false
+	local waitEndTime = 0
+
+	local CoreMenu = Instance.new("ScreenGui")
+	CoreMenu.Name = "BloxFruits_GodTier_Menu"
+	CoreMenu.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	pcall(function() CoreMenu.Parent = CoreGui end)
+	if not CoreMenu.Parent then CoreMenu.Parent = LocalPlayer:WaitForChild("PlayerGui") end
+
+	local AmbientBackground = Instance.new("Frame")
+	AmbientBackground.Size = UDim2.new(1, 0, 1, 0)
+	AmbientBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	AmbientBackground.BackgroundTransparency = 1
+	AmbientBackground.BorderSizePixel = 0
+	AmbientBackground.Parent = CoreMenu
+
+	local BaseHolder = Instance.new("Frame")
+	local FinalSize = UDim2.new(0, 440, 0, 470)
+	BaseHolder.Name = "BaseHolder"
+	BaseHolder.Size = UDim2.new(0, 0, 0, 0)
+	BaseHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
+	BaseHolder.AnchorPoint = Vector2.new(0.5, 0.5)
+	BaseHolder.BackgroundTransparency = 1
+	BaseHolder.Active = true
+	BaseHolder.Parent = AmbientBackground
+
+	for _, layer in ipairs({{12, 0.55, 16}, {24, 0.75, 22}, {36, 0.90, 28}}) do
+		local Shadow = Instance.new("Frame")
+		Shadow.Size = UDim2.new(1, layer[1], 1, layer[1])
+		Shadow.Position = UDim2.new(0.5, 0, 0.5, 5)
+		Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+		Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		Shadow.BackgroundTransparency = layer[2]
+		Shadow.BorderSizePixel = 0
+		Shadow.ZIndex = 1
+		Instance.new("UICorner", Shadow).CornerRadius = UDim.new(0, layer[3])
+		Shadow.Parent = BaseHolder
+	end
+
+	local MainContainer = Instance.new("Frame")
+	MainContainer.Size = UDim2.new(1, 0, 1, 0)
+	MainContainer.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+	MainContainer.BorderSizePixel = 0
+	MainContainer.ZIndex = 2
+	MainContainer.Parent = BaseHolder
+	Instance.new("UICorner", MainContainer).CornerRadius = UDim.new(0, 14)
+
+	local RainbowInlay = Instance.new("Frame")
+	RainbowInlay.Size = UDim2.new(1, -6, 1, -6)
+	RainbowInlay.Position = UDim2.new(0.5, 0, 0.5, 0)
+	RainbowInlay.AnchorPoint = Vector2.new(0.5, 0.5)
+	RainbowInlay.BorderSizePixel = 0
+	RainbowInlay.ZIndex = 3
+	RainbowInlay.Parent = MainContainer
+	Instance.new("UICorner", RainbowInlay).CornerRadius = UDim.new(0, 12)
+
+	local RainbowGradient = Instance.new("UIGradient")
+	RainbowGradient.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+		ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 110, 0)),
+		ColorSequenceKeypoint.new(0.32, Color3.fromRGB(255, 230, 0)),
+		ColorSequenceKeypoint.new(0.48, Color3.fromRGB(0, 255, 120)),
+		ColorSequenceKeypoint.new(0.64, Color3.fromRGB(0, 220, 255)),
+		ColorSequenceKeypoint.new(0.8, Color3.fromRGB(70, 70, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 0, 255))
+	}
+	RainbowGradient.Parent = RainbowInlay
+
+	local ContentFrame = Instance.new("Frame")
+	ContentFrame.Size = UDim2.new(1, -6, 1, -6)
+	ContentFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+	ContentFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	ContentFrame.BorderSizePixel = 0
+	ContentFrame.ZIndex = 4
+	ContentFrame.ClipsDescendants = true
+	ContentFrame.Parent = RainbowInlay
+	Instance.new("UICorner", ContentFrame).CornerRadius = UDim.new(0, 10)
+
+	local ContentGradient = Instance.new("UIGradient")
+	ContentGradient.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(26, 26, 30)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(12, 12, 14))
+	}
+	ContentGradient.Rotation = 90
+	ContentGradient.Parent = ContentFrame
+
+	local GalaxyContainer = Instance.new("Frame")
+	GalaxyContainer.Size = UDim2.new(1, 0, 1, 0)
+	GalaxyContainer.BackgroundTransparency = 1
+	GalaxyContainer.ZIndex = 5
+	GalaxyContainer.ClipsDescendants = true
+	GalaxyContainer.Parent = ContentFrame
+
+	local galaxyStars = {}
+	for i = 1, 200 do
+		local Star = Instance.new("Frame")
+		local size = math.random(1, 3)
+		Star.Size = UDim2.new(0, size, 0, size)
+		Star.Position = UDim2.new(math.random() * 0.96 + 0.02, 0, math.random() * 0.96 + 0.02, 0)
+		Star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Star.BorderSizePixel = 0
+		Star.BackgroundTransparency = 0.3 + math.random() * 0.5
+		Star.ZIndex = 6
+		Instance.new("UICorner", Star).CornerRadius = UDim.new(1, 0)
+		Star.Parent = GalaxyContainer
+		table.insert(galaxyStars, {Object = Star, Speed = 0.1 + math.random() * 0.3, Phase = math.random() * 100, Size = size})
+	end
+
+	local dustParticles = {}
+	for i = 1, 40 do
+		local Dust = Instance.new("Frame")
+		local size = math.random(1, 3)
+		Dust.Size = UDim2.new(0, size, 0, size)
+		local baseX = math.random(5, 95) / 100
+		Dust.Position = UDim2.new(baseX, 0, math.random(0, 100)/100, 0)
+		Dust.BorderSizePixel = 0
+		Dust.BackgroundColor3 = Color3.fromRGB(200, 220, 255)
+		local speedBase = math.random(4, 16) / 100
+		Dust.BackgroundTransparency = 1 - (speedBase * 5)
+		Dust.ZIndex = 8
+		Instance.new("UICorner", Dust).CornerRadius = UDim.new(1, 0)
+		Dust.Parent = GalaxyContainer
+		table.insert(dustParticles, {Object = Dust, Speed = speedBase, BaseX = baseX, Seed = math.random(1, 1000)})
+	end
+
+	local GlossOverlay = Instance.new("Frame")
+	GlossOverlay.Size = UDim2.new(1, 0, 0.38, 0)
+	GlossOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	GlossOverlay.BorderSizePixel = 0
+	GlossOverlay.ZIndex = 9
+	GlossOverlay.Parent = ContentFrame
+	local GlossGradient = Instance.new("UIGradient")
+	GlossGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0.95), NumberSequenceKeypoint.new(1, 1.00)}
+	GlossGradient.Rotation = 90
+	GlossGradient.Parent = GlossOverlay
+
+	-- Title
+	local Title = Instance.new("TextLabel")
+	Title.Size = UDim2.new(1, 0, 0, 40)
+	Title.Position = UDim2.new(0, 0, 0, 15)
+	Title.Text = "🔑 LẤY KEY HÔM NAY 🔑"
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextSize = 20
+	Title.Font = Enum.Font.GothamBold
+	Title.BackgroundTransparency = 1
+	Title.ZIndex = 10
+	Title.Parent = ContentFrame
+	local TitleGlow = Instance.new("UIStroke")
+	TitleGlow.Color = Color3.fromRGB(0, 220, 255)
+	TitleGlow.Transparency = 0.5
+	TitleGlow.Parent = Title
+
+	-- Info frame
+	local InfoFrame = Instance.new("Frame")
+	InfoFrame.Size = UDim2.new(0.85, 0, 0, 85)
+	InfoFrame.Position = UDim2.new(0.075, 0, 0, 60)
+	InfoFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+	InfoFrame.BorderSizePixel = 0
+	InfoFrame.ZIndex = 8
+	InfoFrame.Parent = ContentFrame
+	Instance.new("UICorner", InfoFrame).CornerRadius = UDim.new(0, 10)
+
+	local RateText = Instance.new("TextLabel")
+	RateText.Size = UDim2.new(1, 0, 1, 0)
+	RateText.Text = "🎲 TỈ LỆ THỜI GIAN CHỜ:\n🟢 25% → Chờ 1 phút\n🟡 35% → Chờ 2 phút\n🔴 50% → Chờ 5 phút\n✅ 100% nhận được key sau khi chờ!"
+	RateText.TextColor3 = Color3.fromRGB(200, 200, 200)
+	RateText.TextSize = 11
+	RateText.Font = Enum.Font.SourceSansBold
+	RateText.BackgroundTransparency = 1
+	RateText.ZIndex = 9
+	RateText.TextXAlignment = Enum.TextXAlignment.Left
+	RateText.Parent = InfoFrame
+
+	local GetKeyNowButton = Instance.new("TextButton")
+	GetKeyNowButton.Size = UDim2.new(0.85, 0, 0, 44)
+	GetKeyNowButton.Position = UDim2.new(0.075, 0, 0, 158)
+	GetKeyNowButton.Text = "🎁 LẤY KEY NGAY"
+	GetKeyNowButton.Font = Enum.Font.GothamBold
+	GetKeyNowButton.TextSize = 16
+	GetKeyNowButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	GetKeyNowButton.BackgroundColor3 = Color3.fromRGB(0, 180, 100)
+	GetKeyNowButton.BorderSizePixel = 0
+	GetKeyNowButton.ZIndex = 8
+	GetKeyNowButton.Parent = ContentFrame
+	Instance.new("UICorner", GetKeyNowButton).CornerRadius = UDim.new(0, 10)
+
+	local StatusFrame = Instance.new("Frame")
+	StatusFrame.Size = UDim2.new(0.85, 0, 0, 80)
+	StatusFrame.Position = UDim2.new(0.075, 0, 0, 215)
+	StatusFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+	StatusFrame.BorderSizePixel = 0
+	StatusFrame.ZIndex = 8
+	StatusFrame.Visible = false
+	StatusFrame.Parent = ContentFrame
+	Instance.new("UICorner", StatusFrame).CornerRadius = UDim.new(0, 10)
+
+	local StatusText = Instance.new("TextLabel")
+	StatusText.Size = UDim2.new(1, 0, 0, 30)
+	StatusText.Position = UDim2.new(0, 0, 0, 8)
+	StatusText.Text = "⏳ ĐANG CHỜ..."
+	StatusText.TextColor3 = Color3.fromRGB(255, 200, 50)
+	StatusText.TextSize = 16
+	StatusText.Font = Enum.Font.GothamBold
+	StatusText.BackgroundTransparency = 1
+	StatusText.ZIndex = 9
+	StatusText.Parent = StatusFrame
+
+	local TimerText = Instance.new("TextLabel")
+	TimerText.Size = UDim2.new(1, 0, 0, 25)
+	TimerText.Position = UDim2.new(0, 0, 0, 45)
+	TimerText.Text = "Còn lại: --:--"
+	TimerText.TextColor3 = Color3.fromRGB(255, 150, 50)
+	TimerText.TextSize = 18
+	TimerText.Font = Enum.Font.GothamBold
+	TimerText.BackgroundTransparency = 1
+	TimerText.ZIndex = 9
+	TimerText.Parent = StatusFrame
+
+	local KeyFrame = Instance.new("Frame")
+	KeyFrame.Size = UDim2.new(0.85, 0, 0, 70)
+	KeyFrame.Position = UDim2.new(0.075, 0, 0, 215)
+	KeyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+	KeyFrame.BorderSizePixel = 0
+	KeyFrame.ZIndex = 8
+	KeyFrame.Visible = false
+	KeyFrame.Parent = ContentFrame
+	Instance.new("UICorner", KeyFrame).CornerRadius = UDim.new(0, 10)
+	local KeyFrameStroke = Instance.new("UIStroke")
+	KeyFrameStroke.Color = Color3.fromRGB(0, 255, 200)
+	KeyFrameStroke.Thickness = 1.5
+	KeyFrameStroke.Transparency = 0.3
+	KeyFrameStroke.Parent = KeyFrame
+
+	local KeyText = Instance.new("TextLabel")
+	KeyText.Size = UDim2.new(1, 0, 1, -22)
+	KeyText.Position = UDim2.new(0, 0, 0, 5)
+	KeyText.Text = ""
+	KeyText.TextColor3 = Color3.fromRGB(0, 255, 200)
+	KeyText.TextSize = 16
+	KeyText.Font = Enum.Font.GothamBold
+	KeyText.BackgroundTransparency = 1
+	KeyText.ZIndex = 9
+	KeyText.Parent = KeyFrame
+
+	local TimeLeftText = Instance.new("TextLabel")
+	TimeLeftText.Size = UDim2.new(1, 0, 0, 18)
+	TimeLeftText.Position = UDim2.new(0, 0, 0.75, 0)
+	TimeLeftText.Text = ""
+	TimeLeftText.TextColor3 = Color3.fromRGB(255, 200, 100)
+	TimeLeftText.TextSize = 10
+	TimeLeftText.Font = Enum.Font.SourceSansBold
+	TimeLeftText.BackgroundTransparency = 1
+	TimeLeftText.ZIndex = 9
+	TimeLeftText.Parent = KeyFrame
+
+	local CopyButton = Instance.new("TextButton")
+	CopyButton.Size = UDim2.new(0.85, 0, 0, 34)
+	CopyButton.Position = UDim2.new(0.075, 0, 0, 298)
+	CopyButton.Text = "📋 COPY KEY"
+	CopyButton.Font = Enum.Font.GothamBold
+	CopyButton.TextSize = 13
+	CopyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	CopyButton.BackgroundColor3 = Color3.fromRGB(0, 180, 150)
+	CopyButton.BorderSizePixel = 0
+	CopyButton.ZIndex = 8
+	CopyButton.Visible = false
+	CopyButton.Parent = ContentFrame
+	Instance.new("UICorner", CopyButton).CornerRadius = UDim.new(0, 8)
+
+	local CancelButton = Instance.new("TextButton")
+	CancelButton.Size = UDim2.new(0.85, 0, 0, 30)
+	CancelButton.Position = UDim2.new(0.075, 0, 0, 305)
+	CancelButton.Text = "❌ HỦY CHỜ"
+	CancelButton.Font = Enum.Font.GothamBold
+	CancelButton.TextSize = 12
+	CancelButton.TextColor3 = Color3.fromRGB(255, 100, 100)
+	CancelButton.BackgroundColor3 = Color3.fromRGB(40, 20, 20)
+	CancelButton.BorderSizePixel = 0
+	CancelButton.ZIndex = 8
+	CancelButton.Visible = false
+	CancelButton.Parent = ContentFrame
+	Instance.new("UICorner", CancelButton).CornerRadius = UDim.new(0, 8)
+
+	local CloseMenuButton = Instance.new("TextButton")
+	CloseMenuButton.Size = UDim2.new(0, 28, 0, 28)
+	CloseMenuButton.Position = UDim2.new(1, -40, 0, 15)
+	CloseMenuButton.Text = "X"
+	CloseMenuButton.TextSize = 14
+	CloseMenuButton.Font = Enum.Font.GothamBold
+	CloseMenuButton.TextColor3 = Color3.fromRGB(255, 80, 80)
+	CloseMenuButton.BackgroundColor3 = Color3.fromRGB(30, 30, 34)
+	CloseMenuButton.BorderSizePixel = 0
+	CloseMenuButton.ZIndex = 10
+	CloseMenuButton.Parent = ContentFrame
+	Instance.new("UICorner", CloseMenuButton).CornerRadius = UDim.new(0, 6)
+
+	-- Hàm bắt đầu chờ
+	local function StartKeyWait()
+		if isWaiting then return end
+		
+		local rand = math.random(1, 100)
+		local waitTime
+		if rand <= 25 then waitTime = 60
+		elseif rand <= 60 then waitTime = 120
+		else waitTime = 300 end
+		
+		isWaiting = true
+		waitEndTime = os.time() + waitTime
+		
+		GetKeyNowButton.Visible = false
+		KeyFrame.Visible = false
+		CopyButton.Visible = false
+		StatusFrame.Visible = true
+		CancelButton.Visible = true
+		
+		local waitMinutes = math.floor(waitTime / 60)
+		local waitSeconds = waitTime % 60
+		StatusText.Text = "⏳ ĐANG CHỜ " .. waitMinutes .. " PHÚT " .. (waitSeconds > 0 and waitSeconds .. " GIÂY" or "")
+		
+		game.StarterGui:SetCore("SendNotification", {
+			Title = "Đang chờ ⏳";
+			Text = "Vui lòng đợi " .. waitMinutes .. " phút để nhận key!";
+			Duration = 5;
+		})
+		
+		coroutine.wrap(function()
+			while isWaiting and ContentFrame.Parent do
+				local remaining = waitEndTime - os.time()
+				if remaining <= 0 then
+					isWaiting = false
+					StatusFrame.Visible = false
+					CancelButton.Visible = false
+					KeyFrame.Visible = true
+					CopyButton.Visible = true
+					GetKeyNowButton.Visible = true
+					GetKeyNowButton.Text = "🔄 LẤY KEY KHÁC"
+					
+					KeyText.Text = currentKey
+					local secLeft = 86400 - (os.time() % 86400)
+					local hLeft = math.floor(secLeft / 3600)
+					local mLeft = math.floor((secLeft % 3600) / 60)
+					TimeLeftText.Text = "⏳ Còn: " .. hLeft .. "h " .. mLeft .. "m trước khi đổi key"
+					
+					game.StarterGui:SetCore("SendNotification", {
+						Title = "Đã có key! 🎉";
+						Text = "Key: " .. currentKey;
+						Duration = 5;
+					})
+					break
+				end
+				
+				local minLeft = math.floor(remaining / 60)
+				local secLeft = remaining % 60
+				TimerText.Text = "Còn lại: " .. minLeft .. ":" .. string.format("%02d", secLeft)
+				task.wait(1)
+			end
+		end)()
+	end
+
+	local function CancelWait()
+		if not isWaiting then return end
+		isWaiting = false
+		StatusFrame.Visible = false
+		CancelButton.Visible = false
+		GetKeyNowButton.Visible = true
+		GetKeyNowButton.Text = "🎁 LẤY KEY NGAY"
+		
+		game.StarterGui:SetCore("SendNotification", {
+			Title = "Đã hủy ❌";
+			Text = "Bạn có thể thử lại!";
+			Duration = 3;
+		})
+	end
+
+	GetKeyNowButton.MouseButton1Click:Connect(StartKeyWait)
+	CancelButton.MouseButton1Click:Connect(CancelWait)
+	
+	CopyButton.MouseButton1Click:Connect(function()
+		setclipboard(currentKey)
+		game.StarterGui:SetCore("SendNotification", {Title = "Đã copy key 🔑"; Text = currentKey; Duration = 3})
+	end)
+
+	RunService.RenderStepped:Connect(function(deltaTime)
+		if not ContentFrame.Parent then return end
+		local currentTime = tick()
+		RainbowInlay.UIGradient.Rotation = (RainbowInlay.UIGradient.Rotation + (110 * deltaTime)) % 360
+		local pulse = math.sin(currentTime * 3)
+		TitleGlow.Thickness = (pulse + 1) * 1.2
+		for _, star in ipairs(galaxyStars) do
+			local brightness = 0.3 + (math.sin(currentTime * star.Speed + star.Phase) + 1) * 0.35
+			star.Object.BackgroundTransparency = 1 - brightness
+		end
+		for _, particle in ipairs(dustParticles) do
+			local dustObj = particle.Object
+			if dustObj and dustObj.Parent then
+				local currentPos = dustObj.Position
+				local newY = currentPos.Y.Scale + (particle.Speed * deltaTime)
+				local waveOffset = math.sin(currentTime * 1.5 + particle.Seed) * 0.035
+				local newX = particle.BaseX + waveOffset
+				if newY > 1 then
+					particle.BaseX = math.random(5, 95) / 100
+					dustObj.Position = UDim2.new(particle.BaseX, 0, -0.05, 0)
+				else
+					dustObj.Position = UDim2.new(newX, currentPos.X.Offset, newY, currentPos.Y.Offset)
+				end
+			end
+		end
+	end)
+
+	BaseHolder.Size = UDim2.new(0, 0, 0, 0)
+	TweenService:Create(BaseHolder, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = FinalSize}):Play()
+
+	local dragging2, dragInput2, dragStart2, startPos2
+	local function update(input)
+		local delta = input.Position - dragStart2
+		BaseHolder.Position = UDim2.new(startPos2.X.Scale, startPos2.X.Offset + delta.X, startPos2.Y.Scale, startPos2.Y.Offset + delta.Y)
+	end
+	BaseHolder.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging2 = true
+			dragStart2 = input.Position
+			startPos2 = BaseHolder.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then dragging2 = false end
+			end)
+		end
+	end)
+	BaseHolder.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput2 = input
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput2 and dragging2 then update(input) end
+	end)
+
+	CloseMenuButton.MouseButton1Click:Connect(function()
+		local closeTween = TweenService:Create(BaseHolder, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)})
+		closeTween:Play()
+		closeTween.Completed:Connect(function() CoreMenu:Destroy() end)
+	end)
+end
+
+-- =============================================
+-- SỰ KIỆN NÚT
+-- =============================================
+GetKeyButton.MouseButton1Click:Connect(CreateRainbowMenu)
+
+CheckButton.MouseButton1Click:Connect(function()
+	if isProcessing then return end
+	isProcessing = true
+
+	local inputKey = TextBox.Text
+	
+	if inputKey == adminKey then
+		keyOk = true
+		isAdmin = true
+		ScreenGui:Destroy()
+		game.StarterGui:SetCore("SendNotification", {Title = "XIN CHÀO ADMIN 👑"; Text = "Đăng nhập quản trị viên thành công!"; Duration = 4})
+	elseif IsValidKey(inputKey) then
+		keyOk = true
+		isAdmin = false
+		ScreenGui:Destroy()
+		game.StarterGui:SetCore("SendNotification", {Title = "Thành công 🎉"; Text = "Đăng nhập người dùng thường!"; Duration = 3})
+	else
+		keyOk = false
+		game.StarterGui:SetCore("SendNotification", {Title = "Sai key ❌"; Text = "Key đã hết hạn hoặc không đúng! Bấm GET KEY để lấy key mới."; Duration = 3})
+	end
+
+	task.wait(0.5)
+	isProcessing = false
+end)
+
+-- ==================================================
+-- CHỜ KEY HỢP LỆ
+-- ==================================================
+repeat task.wait(0.1) until keyOk == true
+
+local Script_NguoiThuong = function()
+	print("🔹 Đang tải chức năng người dùng thường...")
+	-- Dán code thường vào đây
+end
+
+local Script_Admin = function()
+	print("🔐 Đang tải chức năng quản trị viên...")
+	-- Dán code admin vào đây
+end
+
+if isAdmin then Script_Admin() else Script_NguoiThuong() end

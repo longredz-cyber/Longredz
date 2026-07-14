@@ -1,0 +1,175 @@
+--[[
+    Menu Bật ID Nhạc - Delta Mobile
+    Dán ID và phát nhạc ngay lập tức
+]]
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "🎵 Music Player",
+    Icon = "music",
+    LoadingTitle = "Đang tải...",
+    LoadingSubtitle = "by You",
+    Theme = "Default",
+    DisableRayfieldPrompts = false,
+    DisableBuildWarnings = false,
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "MusicPlayer",
+        FileName = "Config"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "",
+        RememberJoins = false
+    },
+    KeySystem = false
+})
+
+local Tab = Window:CreateTab("🏠 Phát Nhạc", "music")
+local Section = Tab:CreateSection("Nhập ID Bài Hát")
+
+local currentSound = nil
+
+-- Hàm dừng nhạc cũ
+local function StopOldMusic()
+    if currentSound then
+        currentSound:Stop()
+        currentSound:Destroy()
+        currentSound = nil
+    end
+end
+
+-- Hàm phát nhạc mới
+local function PlayMusicByID(id)
+    StopOldMusic()
+    
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://" .. id
+    sound.Volume = 5
+    sound.Parent = character
+    sound:Play()
+    
+    currentSound = sound
+    
+    Rayfield:Notify({
+        Title = "Đang Phát",
+        Content = "ID: " .. id,
+        Duration = 3,
+        Image = "music",
+    })
+end
+
+-- Input ID
+local MusicIDInput = Tab:CreateInput({
+    Name = "ID Bài Hát",
+    CurrentValue = "",
+    PlaceholderText = "VD: 1837841520",
+    RemoveTextAfterFocusLost = false,
+    Flag = "MusicID",
+    Callback = function(Text)
+        -- Không làm gì khi nhập
+    end,
+})
+
+-- Nút Phát Nhạc
+Tab:CreateButton({
+    Name = "▶ PHÁT NHẠC",
+    Callback = function()
+        local id = MusicIDInput.CurrentValue
+        if id ~= "" and tonumber(id) then
+            PlayMusicByID(id)
+        else
+            Rayfield:Notify({
+                Title = "Lỗi",
+                Content = "Vui lòng nhập ID hợp lệ!",
+                Duration = 3,
+                Image = "alert",
+            })
+        end
+    end,
+})
+
+-- Nút Dừng Nhạc
+Tab:CreateButton({
+    Name = "⏹ DỪNG NHẠC",
+    Callback = function()
+        StopOldMusic()
+        Rayfield:Notify({
+            Title = "Đã Dừng",
+            Content = "Nhạc đã tắt!",
+            Duration = 2,
+            Image = "music",
+        })
+    end,
+})
+
+-- Slider Âm Lượng
+local VolumeSection = Tab:CreateSection("Điều Chỉnh Âm Lượng")
+
+Tab:CreateSlider({
+    Name = "Âm Lượng",
+    Range = {0, 10},
+    Increment = 1,
+    Suffix = "",
+    CurrentValue = 5,
+    Flag = "Volume",
+    Callback = function(Value)
+        if currentSound then
+            currentSound.Volume = Value
+        end
+    end,
+})
+
+-- Một số ID mẫu
+local SampleSection = Tab:CreateSection("ID Nhạc Mẫu")
+
+Tab:CreateButton({
+    Name = "🎵 Nếu Em Không Về - 1837841520",
+    Callback = function()
+        PlayMusicByID("1837841520")
+    end,
+})
+
+Tab:CreateButton({
+    Name = "🎵 Waiting For Love - 1386992349",
+    Callback = function()
+        PlayMusicByID("1386992349")
+    end,
+})
+
+Tab:CreateButton({
+    Name = "🎵 Alan Walker Faded - 27697719",
+    Callback = function()
+        PlayMusicByID("27697719")
+    end,
+})
+
+Tab:CreateButton({
+    Name = "🎵 Despacito - 673605737",
+    Callback = function()
+        PlayMusicByID("673605737")
+    end,
+})
+
+Tab:CreateButton({
+    Name = "🎵 Baby Shark - 614018503",
+    Callback = function()
+        PlayMusicByID("614018503")
+    end,
+})
+
+-- Tự động dừng khi chết
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+    StopOldMusic()
+end)
+
+Rayfield:Notify({
+    Title = "Thành Công",
+    Content = "Menu đã tải xong! Nhập ID và thưởng thức nhạc 🎶",
+    Duration = 4,
+    Image = "check",
+})

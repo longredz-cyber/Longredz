@@ -1,0 +1,1833 @@
+-- ==================================================
+-- 🔐 LONG REDZ - KEY SYSTEM FULL (CHỈ KEY ADMIN ĐĂNG NHẬP ĐƯỢC)
+-- ==================================================
+local validKeys = {
+	"BLOX-7391-2847-5062", "BLOX-1859-3742-9105", "BLOX-4206-1953-7831", "BLOX-9572-6048-2319",
+	"BLOX-3184-5927-8064", "BLOX-6725-8193-4507", "BLOX-2947-1058-6392", "BLOX-5813-7246-1904",
+	"BLOX-8052-3671-9425", "BLOX-1476-9302-5817", "BLOX-9203-4851-7639", "BLOX-3581-2094-6148",
+	"BLOX-7162-5439-8205", "BLOX-4937-8105-2761", "BLOX-2694-7382-5019", "BLOX-8415-3967-1253",
+	"BLOX-5379-1824-6947", "BLOX-1028-9573-4382", "BLOX-6853-4291-7156", "BLOX-3974-6185-2493",
+	"BLOX-9126-3750-8571", "BLOX-4502-7916-3028", "BLOX-7691-2583-9406", "BLOX-2835-9047-6132",
+	"BLOX-5719-1362-8954", "BLOX-8347-6201-4729", "BLOX-1952-4873-3065", "BLOX-6408-2957-7813",
+	"BLOX-3271-8519-5492", "BLOX-9014-5732-1687", "BLOX-4196-7084-2531", "BLOX-7583-3190-9246",
+	"BLOX-2749-9615-6803", "BLOX-5932-1847-4175", "BLOX-8617-4253-3928", "BLOX-1305-6972-8541",
+	"BLOX-6824-2139-7059", "BLOX-3491-8706-5214", "BLOX-9753-4381-1602", "BLOX-2068-7594-9375",
+	"BLOX-5182-3427-6891", "BLOX-8945-1073-2548", "BLOX-1739-9265-4037", "BLOX-6357-5812-8194",
+	"BLOX-3820-7491-5623", "BLOX-9418-2637-1086", "BLOX-4673-8920-3752", "BLOX-7295-3148-9561",
+	"BLOX-2584-6739-4208", "BLOX-5031-9417-8379", "BLOX-8762-1504-2945", "BLOX-1493-4276-7182",
+	"BLOX-6910-8352-3697", "BLOX-3158-5903-9416", "BLOX-9827-2461-5073", "BLOX-4369-7185-2859",
+	"BLOX-7041-3926-8634", "BLOX-2973-6510-4127", "BLOX-5806-1793-9358", "BLOX-8592-4061-3714",
+	"BLOX-1284-9537-6491", "BLOX-6731-2805-7925", "BLOX-3429-8176-5308", "BLOX-9615-4923-1847",
+	"BLOX-2173-7549-9062", "BLOX-5948-3271-6815", "BLOX-8307-1659-4293", "BLOX-1562-9048-7351",
+	"BLOX-6849-2734-8109", "BLOX-3957-6182-5476", "BLOX-9281-4507-1934", "BLOX-4726-8391-3052",
+	"BLOX-7105-3864-9287", "BLOX-2894-7053-6143", "BLOX-5631-1927-8502", "BLOX-8473-4195-2769",
+	"BLOX-1359-9842-5318", "BLOX-6924-2571-7096", "BLOX-3782-8419-4925", "BLOX-9506-3287-1641"
+}
+
+local adminKey = "ADMIN123!"
+local keyLink = "https://www.tiktok.com/@lon12317"
+local SECRET_SALT = "LONGREDZ2026_SECRET_KEY_SYSTEM"
+
+local keyOk = false
+local isAdmin = false
+local isProcessing = false
+
+-- =============================================
+-- HỆ THỐNG KHÓA SCRIPT (BẢO TRÌ)
+-- =============================================
+local MAINTENANCE_FILE = "LongRedz_Maintenance.json"
+
+local function GetMaintenanceStatus()
+	if not isfile(MAINTENANCE_FILE) then
+		return {Locked = false, LockedBy = "", LockedAt = 0}
+	end
+	local success, result = pcall(function() return readfile(MAINTENANCE_FILE) end)
+	if success and result then return HttpService:JSONDecode(result) end
+	return {Locked = false, LockedBy = "", LockedAt = 0}
+end
+
+local function SetMaintenanceStatus(locked, by)
+	local data = {
+		Locked = locked,
+		LockedBy = by or "Admin",
+		LockedAt = os.time()
+	}
+	writefile(MAINTENANCE_FILE, HttpService:JSONEncode(data))
+end
+
+-- Kiểm tra bảo trì ngay khi script chạy
+local maintenanceData = GetMaintenanceStatus()
+if maintenanceData.Locked then
+	-- Hiện thông báo bảo trì trong 10 giây rồi tắt script
+	local MaintGui = Instance.new("ScreenGui", CoreGui)
+	MaintGui.Name = "MaintenanceNotice"
+	MaintGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	
+	local MaintFrame = Instance.new("Frame", MaintGui)
+	MaintFrame.Size = UDim2.new(0, 400, 0, 200)
+	MaintFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
+	MaintFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	MaintFrame.BorderSizePixel = 0
+	Instance.new("UICorner", MaintFrame).CornerRadius = UDim.new(0, 14)
+	
+	local MaintStroke = Instance.new("UIStroke", MaintFrame)
+	MaintStroke.Thickness = 2
+	MaintStroke.Color = Color3.fromRGB(255, 50, 50)
+	
+	local MaintTitle = Instance.new("TextLabel", MaintFrame)
+	MaintTitle.Size = UDim2.new(1, 0, 0, 40)
+	MaintTitle.Position = UDim2.new(0, 0, 0, 30)
+	MaintTitle.Text = "🚧 SCRIPT ĐANG BẢO TRÌ 🚧"
+	MaintTitle.TextColor3 = Color3.fromRGB(255, 50, 50)
+	MaintTitle.Font = Enum.Font.GothamBold
+	MaintTitle.TextSize = 20
+	MaintTitle.BackgroundTransparency = 1
+	
+	local MaintDesc = Instance.new("TextLabel", MaintFrame)
+	MaintDesc.Size = UDim2.new(1, 0, 0, 30)
+	MaintDesc.Position = UDim2.new(0, 0, 0, 80)
+	MaintDesc.Text = "Script tạm thời bị khóa bởi Admin.\nVui lòng quay lại sau!"
+	MaintDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
+	MaintDesc.Font = Enum.Font.Gotham
+	MaintDesc.TextSize = 14
+	MaintDesc.BackgroundTransparency = 1
+	
+	local MaintTimer = Instance.new("TextLabel", MaintFrame)
+	MaintTimer.Size = UDim2.new(1, 0, 0, 30)
+	MaintTimer.Position = UDim2.new(0, 0, 0, 130)
+	MaintTimer.Text = "Tự động thoát sau: 10 giây"
+	MaintTimer.TextColor3 = Color3.fromRGB(255, 150, 50)
+	MaintTimer.Font = Enum.Font.GothamBold
+	MaintTimer.TextSize = 14
+	MaintTimer.BackgroundTransparency = 1
+	
+	-- Đếm ngược 10 giây rồi thoát
+	coroutine.wrap(function()
+		for i = 10, 1, -1 do
+			MaintTimer.Text = "Tự động thoát sau: " .. i .. " giây"
+			task.wait(1)
+		end
+		if MaintGui.Parent then MaintGui:Destroy() end
+	end)()
+	
+	return -- Dừng script tại đây
+end
+
+-- =============================================
+-- BẢNG GIÁ KEY
+-- =============================================
+local KEY_PRICES = {
+	{Name = "🕐 24 Giờ", Value = "24hours", Price = "Miễn phí", Color = Color3.fromRGB(255, 80, 80)},
+	{Name = "📆 1 Tuần", Value = "7days", Price = "20.000 VNĐ", Color = Color3.fromRGB(255, 150, 0)},
+	{Name = "📅 1 Tháng", Value = "30days", Price = "50.000 VNĐ", Color = Color3.fromRGB(255, 200, 0)},
+	{Name = "🔒 Vĩnh viễn", Value = "forever", Price = "150.000 VNĐ", Color = Color3.fromRGB(0, 255, 150)}
+}
+
+-- =============================================
+-- HỆ THỐNG QUẢN LÝ KEY
+-- =============================================
+local HttpService = game:GetService("HttpService")
+local PERMANENT_KEY_FILE = "LongRedz_PermanentKeys.json"
+local BLACKLIST_FILE = "LongRedz_Blacklist.json"
+
+local function GetKeyStorage()
+	if not isfolder("LongRedz_Keys") then makefolder("LongRedz_Keys") end
+end
+
+local function SavePermanentKey(keyData)
+	GetKeyStorage()
+	local permanentKeys = {}
+	if isfile(PERMANENT_KEY_FILE) then
+		local success, result = pcall(function() return readfile(PERMANENT_KEY_FILE) end)
+		if success and result then permanentKeys = HttpService:JSONDecode(result) end
+	end
+	local exists = false
+	for _, k in ipairs(permanentKeys) do
+		if k.Key == keyData.Key then exists = true break end
+	end
+	if not exists then
+		table.insert(permanentKeys, keyData)
+		writefile(PERMANENT_KEY_FILE, HttpService:JSONEncode(permanentKeys))
+	end
+end
+
+local function GetPermanentKeys()
+	GetKeyStorage()
+	if not isfile(PERMANENT_KEY_FILE) then return {} end
+	local success, result = pcall(function() return readfile(PERMANENT_KEY_FILE) end)
+	if success and result then return HttpService:JSONDecode(result) end
+	return {}
+end
+
+local function AddToBlacklist(key)
+	GetKeyStorage()
+	local blacklist = {}
+	if isfile(BLACKLIST_FILE) then
+		local success, result = pcall(function() return readfile(BLACKLIST_FILE) end)
+		if success and result then blacklist = HttpService:JSONDecode(result) end
+	end
+	blacklist[key] = {Key = key, DisabledAt = os.time(), DisabledBy = "Admin"}
+	writefile(BLACKLIST_FILE, HttpService:JSONEncode(blacklist))
+end
+
+local function IsKeyBlacklisted(key)
+	if not isfile(BLACKLIST_FILE) then return false end
+	local success, result = pcall(function() return readfile(BLACKLIST_FILE) end)
+	if success and result then
+		local blacklist = HttpService:JSONDecode(result)
+		return blacklist[key] ~= nil
+	end
+	return false
+end
+
+local function GetBlacklist()
+	if not isfile(BLACKLIST_FILE) then return {} end
+	local success, result = pcall(function() return readfile(BLACKLIST_FILE) end)
+	if success and result then return HttpService:JSONDecode(result) end
+	return {}
+end
+
+local function RemoveFromBlacklist(key)
+	local blacklist = GetBlacklist()
+	if blacklist[key] then
+		blacklist[key] = nil
+		writefile(BLACKLIST_FILE, HttpService:JSONEncode(blacklist))
+		return true
+	end
+	return false
+end
+
+-- =============================================
+-- HÀM XÁC THỰC KEY (CHỈ KEY ADMIN MỚI ĐĂNG NHẬP ĐƯỢC)
+-- =============================================
+local function SimpleHash(str)
+	local hash = 0
+	for i = 1, #str do
+		local char = string.byte(str, i)
+		hash = (hash * 31 + char) % 65536
+	end
+	return string.format("%04X", hash)
+end
+
+function GenerateChecksum(part1, part2, part3, duration)
+	local data = part1 .. "|" .. part2 .. "|" .. part3 .. "|" .. duration .. "|" .. SECRET_SALT
+	return SimpleHash(data)
+end
+
+local function IsGeneratedKeyValid(key)
+	if IsKeyBlacklisted(key) then return false end
+	local parts = {}
+	for part in string.gmatch(key, "[^-]+") do table.insert(parts, part) end
+	if #parts ~= 5 then return false end
+	local c1, c2, c3, durationCode, checksum = parts[1], parts[2], parts[3], parts[4], parts[5]
+	local durationValue = nil
+	if durationCode == "24H" then durationValue = "24hours"
+	elseif durationCode == "7D" then durationValue = "7days"
+	elseif durationCode == "30D" then durationValue = "30days"
+	elseif durationCode == "FVR" then durationValue = "forever"
+	else return false end
+	
+	-- CHỈ KIỂM TRA CHECKSUM, KHÔNG CẦN FILE
+	if checksum == GenerateChecksum(c1, c2, c3, durationValue) then
+		return true
+	end
+	
+	return false
+end
+
+local function GetDailyKey()
+	local daySeed = math.floor(os.time() / 86400)
+	math.randomseed(daySeed)
+	local index = math.random(1, #validKeys)
+	local dailyKey = validKeys[index]
+	math.randomseed(os.time())
+	return dailyKey
+end
+
+-- =============================================
+-- HÀM KIỂM TRA KEY CHÍNH (CHỈ CHẤP NHẬN ADMIN)
+-- =============================================
+local function IsValidKey(inputKey)
+	-- CHỈ KEY ADMIN MỚI ĐĂNG NHẬP ĐƯỢC
+	if inputKey == adminKey then 
+		return true 
+	end
+	
+	-- TẤT CẢ KEY KHÁC ĐỀU BỊ TỪ CHỐI
+	return false
+end
+
+-- Services
+local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+GetKeyStorage()
+
+-- =============================================
+-- GIAO DIỆN NHẬP KEY CHÍNH
+-- =============================================
+if CoreGui:FindFirstChild("LongRedzKeySystem") then CoreGui["LongRedzKeySystem"]:Destroy() end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "LongRedzKeySystem"
+ScreenGui.Parent = CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Frame.Size = UDim2.new(0, 360, 0, 340)
+Frame.Position = UDim2.new(0.5, -180, 0.5, -170)
+Frame.BorderSizePixel = 0
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 16)
+
+local MenuStroke = Instance.new("UIStroke")
+MenuStroke.Thickness = 2
+MenuStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+MenuStroke.Parent = Frame
+
+coroutine.wrap(function()
+	while task.wait() do
+		MenuStroke.Color = Color3.fromHSV((tick() * 0.2) % 1, 1, 1)
+	end
+end)()
+
+-- Logo clickable
+local LogoButton = Instance.new("TextButton")
+LogoButton.Parent = Frame
+LogoButton.Size = UDim2.new(1, 0, 0, 50)
+LogoButton.Position = UDim2.new(0, 0, 0, 10)
+LogoButton.BackgroundTransparency = 1
+LogoButton.ZIndex = 2
+LogoButton.Text = ""
+LogoButton.AutoButtonColor = false
+
+local LogoLabel = Instance.new("TextLabel")
+LogoLabel.Parent = LogoButton
+LogoLabel.Size = UDim2.new(1, 0, 1, 0)
+LogoLabel.BackgroundTransparency = 1
+LogoLabel.ZIndex = 2
+LogoLabel.RichText = true
+LogoLabel.Text = '<i>LONG <font color="rgb(255, 20, 20)">REDZ</font></i>'
+LogoLabel.Font = Enum.Font.Michroma
+LogoLabel.TextSize = 36
+LogoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+LogoLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+local LogoStroke = Instance.new("UIStroke")
+LogoStroke.Thickness = 2
+LogoStroke.Color = Color3.fromRGB(0, 0, 0)
+LogoStroke.Parent = LogoLabel
+
+LogoButton.MouseEnter:Connect(function()
+	TweenService:Create(LogoLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+end)
+LogoButton.MouseLeave:Connect(function()
+	TweenService:Create(LogoLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+end)
+
+-- Key display
+local KeyDisplay = Instance.new("TextLabel")
+KeyDisplay.Parent = Frame
+KeyDisplay.Size = UDim2.new(0.9, 0, 0, 24)
+KeyDisplay.Position = UDim2.new(0.05, 0, 0, 65)
+KeyDisplay.BackgroundTransparency = 1
+KeyDisplay.ZIndex = 2
+KeyDisplay.Font = Enum.Font.SourceSansBold
+KeyDisplay.TextSize = 10
+KeyDisplay.TextColor3 = Color3.fromRGB(255, 200, 50)
+KeyDisplay.TextXAlignment = Enum.TextXAlignment.Center
+KeyDisplay.Text = "🔐 Nhập key Admin để đăng nhập"
+
+coroutine.wrap(function()
+	while task.wait(1) do
+		if not keyOk then
+			KeyDisplay.Text = "🔐 Nhập key Admin để đăng nhập"
+		end
+	end
+end)()
+
+-- Input
+local InputFrame = Instance.new("Frame")
+InputFrame.Parent = Frame
+InputFrame.Size = UDim2.new(0.9, 0, 0, 32)
+InputFrame.Position = UDim2.new(0.05, 0, 0, 100)
+InputFrame.BackgroundTransparency = 1
+InputFrame.ZIndex = 2
+
+local LineBottom = Instance.new("Frame")
+LineBottom.Parent = InputFrame
+LineBottom.Size = UDim2.new(1, 0, 0, 2)
+LineBottom.Position = UDim2.new(0, 0, 1, 0)
+LineBottom.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+LineBottom.BorderSizePixel = 0
+
+local TitleInput = Instance.new("TextLabel")
+TitleInput.Parent = InputFrame
+TitleInput.Text = "ENTER KEY HERE"
+TitleInput.Font = Enum.Font.SourceSansBold
+TitleInput.TextSize = 13
+TitleInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleInput.Size = UDim2.new(0.4, 0, 1, 0)
+TitleInput.TextXAlignment = Enum.TextXAlignment.Left
+TitleInput.BackgroundTransparency = 1
+
+local TextBox = Instance.new("TextBox")
+TextBox.Parent = InputFrame
+TextBox.PlaceholderText = "..."
+TextBox.Font = Enum.Font.SourceSansBold
+TextBox.TextSize = 14
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+TextBox.Size = UDim2.new(0.6, 0, 1, 0)
+TextBox.Position = UDim2.new(0.4, 0, 0, 0)
+TextBox.TextXAlignment = Enum.TextXAlignment.Right
+TextBox.BackgroundTransparency = 1
+TextBox.ClearTextOnFocus = false
+
+-- Nút GET KEY
+local GetKeyButton = Instance.new("TextButton")
+GetKeyButton.Parent = Frame
+GetKeyButton.Text = "GET KEY"
+GetKeyButton.Font = Enum.Font.SourceSansBold
+GetKeyButton.TextSize = 13
+GetKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyButton.Size = UDim2.new(0.9, 0, 0, 34)
+GetKeyButton.Position = UDim2.new(0.05, 0, 0, 145)
+GetKeyButton.BackgroundColor3 = Color3.fromRGB(195, 20, 20)
+GetKeyButton.BorderSizePixel = 0
+GetKeyButton.ZIndex = 2
+Instance.new("UICorner", GetKeyButton).CornerRadius = UDim.new(0, 8)
+
+-- Nút SUBMIT
+local CheckButton = Instance.new("TextButton")
+CheckButton.Parent = Frame
+CheckButton.Text = "SUBMIT KEY"
+CheckButton.Font = Enum.Font.SourceSansBold
+CheckButton.TextSize = 13
+CheckButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckButton.Size = UDim2.new(0.9, 0, 0, 34)
+CheckButton.Position = UDim2.new(0.05, 0, 0, 187)
+CheckButton.BackgroundColor3 = Color3.fromRGB(195, 20, 20)
+CheckButton.BorderSizePixel = 0
+CheckButton.ZIndex = 2
+Instance.new("UICorner", CheckButton).CornerRadius = UDim.new(0, 8)
+
+-- Ghi chú liên hệ
+local BuyNote = Instance.new("TextLabel")
+BuyNote.Parent = Frame
+BuyNote.Size = UDim2.new(0.9, 0, 0, 16)
+BuyNote.Position = UDim2.new(0.05, 0, 0, 228)
+BuyNote.BackgroundTransparency = 1
+BuyNote.ZIndex = 2
+BuyNote.Font = Enum.Font.SourceSansBold
+BuyNote.TextSize = 9
+BuyNote.TextColor3 = Color3.fromRGB(255, 215, 0)
+BuyNote.TextXAlignment = Enum.TextXAlignment.Center
+BuyNote.Text = "💬 Mua key: " .. keyLink
+
+-- Credit
+local CreditLabel = Instance.new("TextLabel")
+CreditLabel.Parent = Frame
+CreditLabel.Size = UDim2.new(1, 0, 0, 16)
+CreditLabel.Position = UDim2.new(0, 0, 0, 248)
+CreditLabel.BackgroundTransparency = 1
+CreditLabel.Text = '<font color="rgb(255,20,20)">REDZ</font> @lon12317 | TIKTOK'
+CreditLabel.RichText = true
+CreditLabel.Font = Enum.Font.SourceSansBold
+CreditLabel.TextSize = 11
+CreditLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+CreditLabel.TextXAlignment = Enum.TextXAlignment.Center
+CreditLabel.ZIndex = 2
+
+local SupportButton = Instance.new("TextButton")
+SupportButton.Parent = Frame
+SupportButton.Text = "SUPPORT US"
+SupportButton.Font = Enum.Font.SourceSansBold
+SupportButton.TextSize = 11
+SupportButton.TextColor3 = Color3.fromRGB(255, 20, 20)
+SupportButton.Size = UDim2.new(0.42, 0, 0, 22)
+SupportButton.Position = UDim2.new(0.05, 0, 0, 270)
+SupportButton.BackgroundTransparency = 1
+SupportButton.BorderSizePixel = 0
+SupportButton.TextXAlignment = Enum.TextXAlignment.Center
+SupportButton.ZIndex = 2
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = Frame
+CloseButton.Text = "CLOSE UI"
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.TextSize = 11
+CloseButton.TextColor3 = Color3.fromRGB(255, 20, 20)
+CloseButton.Size = UDim2.new(0.42, 0, 0, 22)
+CloseButton.Position = UDim2.new(0.53, 0, 0, 270)
+CloseButton.BackgroundTransparency = 1
+CloseButton.BorderSizePixel = 0
+CloseButton.TextXAlignment = Enum.TextXAlignment.Center
+CloseButton.ZIndex = 2
+
+-- Kéo thả
+local UIS = game:GetService("UserInputService")
+local dragging, dragStart, startPos
+
+Frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Frame.Position
+	end
+end)
+
+UIS.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		local delta = input.Position - dragStart
+		Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+	ScreenGui:Destroy()
+	keyOk = false
+end)
+
+SupportButton.MouseButton1Click:Connect(function()
+	setclipboard(keyLink)
+	game.StarterGui:SetCore("SendNotification", {Title = "Long Redz Support"; Text = "Đã copy link mạng xã hội!"; Duration = 3})
+end)
+
+BuyNote.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		setclipboard(keyLink)
+		game.StarterGui:SetCore("SendNotification", {Title = "Đã copy link 🔗"; Text = keyLink; Duration = 3})
+	end
+end)
+
+-- =============================================
+-- KEY GENERATOR + QUẢN LÝ KEY + BẢNG GIÁ + TÌM KIẾM + KHÓA SCRIPT + THÔNG BÁO
+-- =============================================
+local function CreateKeyGenerator()
+	if CoreGui:FindFirstChild("KeyGenerator_Menu") then CoreGui["KeyGenerator_Menu"]:Destroy() return end
+	
+	local GenMenu = Instance.new("ScreenGui")
+	GenMenu.Name = "KeyGenerator_Menu"
+	GenMenu.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	GenMenu.ResetOnSpawn = false
+	GenMenu.Parent = CoreGui
+
+	local AmbientBG = Instance.new("Frame")
+	AmbientBG.Size = UDim2.new(1, 0, 1, 0)
+	AmbientBG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	AmbientBG.BackgroundTransparency = 1
+	AmbientBG.BorderSizePixel = 0
+	AmbientBG.Parent = GenMenu
+
+	local BaseHolder = Instance.new("Frame")
+	local FinalSize = UDim2.new(0, 520, 0, 720)
+	BaseHolder.Name = "BaseHolder"
+	BaseHolder.Size = UDim2.new(0, 0, 0, 0)
+	BaseHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
+	BaseHolder.AnchorPoint = Vector2.new(0.5, 0.5)
+	BaseHolder.BackgroundTransparency = 1
+	BaseHolder.Active = true
+	BaseHolder.Parent = AmbientBG
+
+	for _, layer in ipairs({{12, 0.55, 16}, {24, 0.75, 22}, {36, 0.90, 28}}) do
+		local Shadow = Instance.new("Frame")
+		Shadow.Size = UDim2.new(1, layer[1], 1, layer[1])
+		Shadow.Position = UDim2.new(0.5, 0, 0.5, 5)
+		Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+		Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		Shadow.BackgroundTransparency = layer[2]
+		Shadow.BorderSizePixel = 0
+		Shadow.ZIndex = 1
+		Instance.new("UICorner", Shadow).CornerRadius = UDim.new(0, layer[3])
+		Shadow.Parent = BaseHolder
+	end
+
+	local MainContainer = Instance.new("Frame")
+	MainContainer.Size = UDim2.new(1, 0, 1, 0)
+	MainContainer.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+	MainContainer.BorderSizePixel = 0
+	MainContainer.ZIndex = 2
+	MainContainer.Parent = BaseHolder
+	Instance.new("UICorner", MainContainer).CornerRadius = UDim.new(0, 14)
+
+	local RainbowInlay = Instance.new("Frame")
+	RainbowInlay.Size = UDim2.new(1, -6, 1, -6)
+	RainbowInlay.Position = UDim2.new(0.5, 0, 0.5, 0)
+	RainbowInlay.AnchorPoint = Vector2.new(0.5, 0.5)
+	RainbowInlay.BorderSizePixel = 0
+	RainbowInlay.ZIndex = 3
+	RainbowInlay.Parent = MainContainer
+	Instance.new("UICorner", RainbowInlay).CornerRadius = UDim.new(0, 12)
+	local RainbowGradient = Instance.new("UIGradient", RainbowInlay)
+	RainbowGradient.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,0)),
+		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0,255,120)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(180,0,255))
+	}
+
+	local ContentFrame = Instance.new("Frame")
+	ContentFrame.Size = UDim2.new(1, -6, 1, -6)
+	ContentFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+	ContentFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	ContentFrame.BorderSizePixel = 0
+	ContentFrame.ZIndex = 4
+	ContentFrame.ClipsDescendants = true
+	ContentFrame.Parent = RainbowInlay
+	Instance.new("UICorner", ContentFrame).CornerRadius = UDim.new(0, 10)
+	Instance.new("UIGradient", ContentFrame).Color = ColorSequence.new(Color3.fromRGB(26,26,30), Color3.fromRGB(12,12,14))
+
+	-- Title + Close
+	local Title = Instance.new("TextLabel", ContentFrame)
+	Title.Size = UDim2.new(1, 0, 0, 25)
+	Title.Position = UDim2.new(0, 0, 0, 5)
+	Title.Text = "🔑 KEY GENERATOR & QUẢN LÝ"
+	Title.TextColor3 = Color3.new(1,1,1)
+	Title.Font = Enum.Font.GothamBold
+	Title.TextSize = 12
+	Title.BackgroundTransparency = 1
+	Title.ZIndex = 10
+
+	local CloseGenBtn = Instance.new("TextButton", ContentFrame)
+	CloseGenBtn.Size = UDim2.new(0, 24, 0, 24)
+	CloseGenBtn.Position = UDim2.new(1, -30, 0, 5)
+	CloseGenBtn.Text = "X"
+	CloseGenBtn.TextSize = 12
+	CloseGenBtn.Font = Enum.Font.GothamBold
+	CloseGenBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+	CloseGenBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 34)
+	CloseGenBtn.BorderSizePixel = 0
+	CloseGenBtn.ZIndex = 10
+	Instance.new("UICorner", CloseGenBtn).CornerRadius = UDim.new(0, 5)
+
+	-- Ghi chú
+	local GenContactNote = Instance.new("TextLabel", ContentFrame)
+	GenContactNote.Size = UDim2.new(1, -30, 0, 14)
+	GenContactNote.Position = UDim2.new(0, 15, 0, 33)
+	GenContactNote.Text = "💬 Mua key: " .. keyLink
+	GenContactNote.TextColor3 = Color3.fromRGB(255, 215, 0)
+	GenContactNote.Font = Enum.Font.GothamBold
+	GenContactNote.TextSize = 8
+	GenContactNote.BackgroundTransparency = 1
+	GenContactNote.TextXAlignment = Enum.TextXAlignment.Left
+	GenContactNote.ZIndex = 10
+
+	-- === PHẦN TẠO KEY ===
+	local C1_Box = Instance.new("TextBox")
+	C1_Box.Size = UDim2.new(0, 120, 0, 22)
+	C1_Box.Position = UDim2.new(0, 15, 0, 52)
+	C1_Box.Text = ""
+	C1_Box.PlaceholderText = "Cụm 1"
+	C1_Box.TextColor3 = Color3.fromRGB(255, 255, 255)
+	C1_Box.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+	C1_Box.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	C1_Box.BorderSizePixel = 0
+	C1_Box.Font = Enum.Font.Gotham
+	C1_Box.TextSize = 11
+	C1_Box.ClearTextOnFocus = false
+	C1_Box.Parent = ContentFrame
+	Instance.new("UICorner", C1_Box).CornerRadius = UDim.new(0, 5)
+
+	local C2_Box = Instance.new("TextBox")
+	C2_Box.Size = UDim2.new(0, 120, 0, 22)
+	C2_Box.Position = UDim2.new(0, 148, 0, 52)
+	C2_Box.Text = ""
+	C2_Box.PlaceholderText = "Cụm 2"
+	C2_Box.TextColor3 = Color3.fromRGB(255, 255, 255)
+	C2_Box.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+	C2_Box.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	C2_Box.BorderSizePixel = 0
+	C2_Box.Font = Enum.Font.Gotham
+	C2_Box.TextSize = 11
+	C2_Box.ClearTextOnFocus = false
+	C2_Box.Parent = ContentFrame
+	Instance.new("UICorner", C2_Box).CornerRadius = UDim.new(0, 5)
+
+	local C3_Box = Instance.new("TextBox")
+	C3_Box.Size = UDim2.new(0, 120, 0, 22)
+	C3_Box.Position = UDim2.new(0, 281, 0, 52)
+	C3_Box.Text = ""
+	C3_Box.PlaceholderText = "Cụm 3"
+	C3_Box.TextColor3 = Color3.fromRGB(255, 255, 255)
+	C3_Box.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+	C3_Box.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	C3_Box.BorderSizePixel = 0
+	C3_Box.Font = Enum.Font.Gotham
+	C3_Box.TextSize = 11
+	C3_Box.ClearTextOnFocus = false
+	C3_Box.Parent = ContentFrame
+	Instance.new("UICorner", C3_Box).CornerRadius = UDim.new(0, 5)
+
+	-- Số lượng
+	local CountBox = Instance.new("TextBox")
+	CountBox.Size = UDim2.new(0, 50, 0, 22)
+	CountBox.Position = UDim2.new(0, 414, 0, 52)
+	CountBox.Text = "1"
+	CountBox.PlaceholderText = "SL"
+	CountBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+	CountBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+	CountBox.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	CountBox.BorderSizePixel = 0
+	CountBox.Font = Enum.Font.GothamBold
+	CountBox.TextSize = 11
+	CountBox.ClearTextOnFocus = false
+	CountBox.Parent = ContentFrame
+	Instance.new("UICorner", CountBox).CornerRadius = UDim.new(0, 5)
+
+	-- Duration
+	local DurationDropdown = Instance.new("TextButton")
+	DurationDropdown.Size = UDim2.new(0, 180, 0, 24)
+	DurationDropdown.Position = UDim2.new(0, 15, 0, 80)
+	DurationDropdown.Text = "🔒 Vĩnh viễn (150K)"
+	DurationDropdown.TextColor3 = Color3.fromRGB(0, 255, 150)
+	DurationDropdown.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	DurationDropdown.BorderSizePixel = 0
+	DurationDropdown.Font = Enum.Font.GothamBold
+	DurationDropdown.TextSize = 10
+	DurationDropdown.AutoButtonColor = false
+	DurationDropdown.Parent = ContentFrame
+	Instance.new("UICorner", DurationDropdown).CornerRadius = UDim.new(0, 5)
+
+	local DurationList = Instance.new("Frame")
+	DurationList.Size = UDim2.new(0, 180, 0, 0)
+	DurationList.Position = UDim2.new(0, 15, 0, 108)
+	DurationList.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+	DurationList.BorderSizePixel = 0
+	DurationList.ClipsDescendants = true
+	DurationList.Visible = false
+	DurationList.ZIndex = 20
+	DurationList.Parent = ContentFrame
+	Instance.new("UICorner", DurationList).CornerRadius = UDim.new(0, 6)
+
+	local durations = {
+		{Name = "🔒 Vĩnh viễn (150K)", Value = "forever", Color = Color3.fromRGB(0, 255, 150)},
+		{Name = "📅 1 Tháng (50K)", Value = "30days", Color = Color3.fromRGB(255, 200, 0)},
+		{Name = "📆 1 Tuần (20K)", Value = "7days", Color = Color3.fromRGB(255, 150, 0)},
+		{Name = "🕐 24 Giờ (Free)", Value = "24hours", Color = Color3.fromRGB(255, 80, 80)}
+	}
+
+	local selectedDuration = durations[1]
+
+	for i, dur in ipairs(durations) do
+		local Option = Instance.new("TextButton")
+		Option.Size = UDim2.new(1, 0, 0, 24)
+		Option.Position = UDim2.new(0, 0, 0, (i-1)*24)
+		Option.Text = dur.Name
+		Option.TextColor3 = dur.Color
+		Option.BackgroundColor3 = Color3.fromRGB(25, 25, 34)
+		Option.BorderSizePixel = 0
+		Option.Font = Enum.Font.Gotham
+		Option.TextSize = 10
+		Option.AutoButtonColor = false
+		Option.ZIndex = 21
+		Option.Parent = DurationList
+		
+		Option.MouseButton1Click:Connect(function()
+			selectedDuration = dur
+			DurationDropdown.Text = dur.Name
+			DurationDropdown.TextColor3 = dur.Color
+			DurationList.Visible = false
+			TweenService:Create(DurationList, TweenInfo.new(0.2), {Size = UDim2.new(0, 180, 0, 0)}):Play()
+		end)
+		
+		Option.MouseEnter:Connect(function()
+			TweenService:Create(Option, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 40, 50)}):Play()
+		end)
+		Option.MouseLeave:Connect(function()
+			TweenService:Create(Option, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(25, 25, 34)}):Play()
+		end)
+	end
+
+	local dropdownOpen = false
+	DurationDropdown.MouseButton1Click:Connect(function()
+		dropdownOpen = not dropdownOpen
+		if dropdownOpen then
+			DurationList.Visible = true
+			TweenService:Create(DurationList, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {Size = UDim2.new(0, 180, 0, 96)}):Play()
+		else
+			TweenService:Create(DurationList, TweenInfo.new(0.2), {Size = UDim2.new(0, 180, 0, 0)}):Play()
+			task.wait(0.2)
+			DurationList.Visible = false
+		end
+	end)
+
+	-- Nút chức năng
+	local GenerateBtn = Instance.new("TextButton")
+	GenerateBtn.Size = UDim2.new(0, 140, 0, 28)
+	GenerateBtn.Position = UDim2.new(0, 15, 0, 112)
+	GenerateBtn.Text = "✨ TẠO KEY"
+	GenerateBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+	GenerateBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 180)
+	GenerateBtn.BorderSizePixel = 0
+	GenerateBtn.Font = Enum.Font.GothamBold
+	GenerateBtn.TextSize = 12
+	GenerateBtn.AutoButtonColor = false
+	GenerateBtn.Parent = ContentFrame
+	Instance.new("UICorner", GenerateBtn).CornerRadius = UDim.new(0, 6)
+
+	local ImportBtn = Instance.new("TextButton")
+	ImportBtn.Size = UDim2.new(0, 70, 0, 28)
+	ImportBtn.Position = UDim2.new(0, 165, 0, 112)
+	ImportBtn.Text = "📥 Import"
+	ImportBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ImportBtn.BackgroundColor3 = Color3.fromRGB(50, 100, 180)
+	ImportBtn.BorderSizePixel = 0
+	ImportBtn.Font = Enum.Font.GothamBold
+	ImportBtn.TextSize = 10
+	ImportBtn.AutoButtonColor = false
+	ImportBtn.Parent = ContentFrame
+	Instance.new("UICorner", ImportBtn).CornerRadius = UDim.new(0, 5)
+
+	local ExportBtn = Instance.new("TextButton")
+	ExportBtn.Size = UDim2.new(0, 70, 0, 28)
+	ExportBtn.Position = UDim2.new(0, 245, 0, 112)
+	ExportBtn.Text = "📤 Export"
+	ExportBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ExportBtn.BackgroundColor3 = Color3.fromRGB(180, 100, 50)
+	ExportBtn.BorderSizePixel = 0
+	ExportBtn.Font = Enum.Font.GothamBold
+	ExportBtn.TextSize = 10
+	ExportBtn.AutoButtonColor = false
+	ExportBtn.Parent = ContentFrame
+	Instance.new("UICorner", ExportBtn).CornerRadius = UDim.new(0, 5)
+
+	-- Import/Export
+	ImportBtn.MouseButton1Click:Connect(function()
+		local importData = getclipboard()
+		if not importData or importData == "" then
+			if isfile("LongRedz_Keys_Backup.txt") then importData = readfile("LongRedz_Keys_Backup.txt")
+			else game.StarterGui:SetCore("SendNotification", {Title = "Không có dữ liệu"; Text = "Hãy copy dữ liệu key cần import!"; Duration = 3}) return end
+		end
+		local success, keys = pcall(function() return HttpService:JSONDecode(importData) end)
+		if not success or type(keys) ~= "table" then
+			game.StarterGui:SetCore("SendNotification", {Title = "Lỗi Import"; Text = "Dữ liệu không hợp lệ!"; Duration = 3}) return end
+		local importedCount = 0
+		for _, newKey in ipairs(keys) do
+			if newKey.Key and newKey.Duration then SavePermanentKey(newKey) importedCount = importedCount + 1 end
+		end
+		game.StarterGui:SetCore("SendNotification", {Title = "Import thành công"; Text = "Đã import " .. importedCount .. " key! Tổng: " .. #GetPermanentKeys() .. " key"; Duration = 4})
+		RefreshKeyList()
+	end)
+
+	ExportBtn.MouseButton1Click:Connect(function()
+		local keys = GetPermanentKeys()
+		if #keys == 0 then game.StarterGui:SetCore("SendNotification", {Title = "Không có key"; Text = "Chưa có key nào được lưu!"; Duration = 3}) return end
+		local exportData = HttpService:JSONEncode(keys)
+		setclipboard(exportData)
+		writefile("LongRedz_Keys_Backup.txt", exportData)
+		game.StarterGui:SetCore("SendNotification", {Title = "Đã Export"; Text = "Đã copy " .. #keys .. " key và lưu file backup!"; Duration = 4})
+	end)
+
+	-- Key Output
+	local KeyOutputBg = Instance.new("Frame")
+	KeyOutputBg.Size = UDim2.new(1, -30, 0, 28)
+	KeyOutputBg.Position = UDim2.new(0, 15, 0, 148)
+	KeyOutputBg.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+	KeyOutputBg.BorderSizePixel = 0
+	KeyOutputBg.Parent = ContentFrame
+	Instance.new("UICorner", KeyOutputBg).CornerRadius = UDim.new(0, 5)
+
+	local KeyOutput = Instance.new("TextLabel")
+	KeyOutput.Size = UDim2.new(1, -70, 1, 0)
+	KeyOutput.Position = UDim2.new(0, 8, 0, 0)
+	KeyOutput.Text = "KEY SẼ HIỆN Ở ĐÂY..."
+	KeyOutput.TextColor3 = Color3.fromRGB(150, 150, 150)
+	KeyOutput.Font = Enum.Font.GothamBold
+	KeyOutput.TextSize = 10
+	KeyOutput.BackgroundTransparency = 1
+	KeyOutput.TextXAlignment = Enum.TextXAlignment.Left
+	KeyOutput.Parent = KeyOutputBg
+
+	local CopyBtn = Instance.new("TextButton")
+	CopyBtn.Size = UDim2.new(0, 55, 0, 18)
+	CopyBtn.Position = UDim2.new(1, -60, 0.5, -9)
+	CopyBtn.Text = "📋 Copy"
+	CopyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	CopyBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+	CopyBtn.BorderSizePixel = 0
+	CopyBtn.Font = Enum.Font.Gotham
+	CopyBtn.TextSize = 9
+	CopyBtn.AutoButtonColor = false
+	CopyBtn.ZIndex = 6
+	CopyBtn.Parent = KeyOutputBg
+	Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 4)
+
+	CopyBtn.MouseButton1Click:Connect(function()
+		if KeyOutput.Text ~= "KEY SẼ HIỆN Ở ĐÂY..." then
+			setclipboard(KeyOutput.Text)
+			CopyBtn.Text = "✅ Đã copy!"
+			task.wait(1.5)
+			CopyBtn.Text = "📋 Copy"
+		end
+	end)
+
+	-- === BẢNG GIÁ ===
+	local PriceTitle = Instance.new("TextLabel")
+	PriceTitle.Size = UDim2.new(1, -30, 0, 16)
+	PriceTitle.Position = UDim2.new(0, 15, 0, 180)
+	PriceTitle.Text = "💎 BẢNG GIÁ:"
+	PriceTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+	PriceTitle.Font = Enum.Font.GothamBold
+	PriceTitle.TextSize = 10
+	PriceTitle.TextXAlignment = Enum.TextXAlignment.Left
+	PriceTitle.BackgroundTransparency = 1
+	PriceTitle.ZIndex = 5
+	PriceTitle.Parent = ContentFrame
+
+	local priceX = 15
+	for i, priceData in ipairs(KEY_PRICES) do
+		local Pkg = Instance.new("Frame")
+		Pkg.Size = UDim2.new(0, 118, 0, 20)
+		Pkg.Position = UDim2.new(0, priceX, 0, 198)
+		Pkg.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+		Pkg.BorderSizePixel = 0
+		Pkg.ZIndex = 5
+		Pkg.Parent = ContentFrame
+		Instance.new("UICorner", Pkg).CornerRadius = UDim.new(0, 4)
+		
+		local PkgText = Instance.new("TextLabel", Pkg)
+		PkgText.Size = UDim2.new(1, 0, 1, 0)
+		PkgText.Text = priceData.Name .. " " .. priceData.Price
+		PkgText.TextColor3 = priceData.Color
+		PkgText.Font = Enum.Font.GothamBold
+		PkgText.TextSize = 9
+		PkgText.BackgroundTransparency = 1
+		PkgText.ZIndex = 6
+		
+		priceX = priceX + 124
+	end
+
+	-- === DIVIDER ===
+	local Divider = Instance.new("Frame")
+	Divider.Size = UDim2.new(1, -30, 0, 1)
+	Divider.Position = UDim2.new(0, 15, 0, 224)
+	Divider.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+	Divider.BorderSizePixel = 0
+	Divider.Parent = ContentFrame
+
+	-- === TÌM KIẾM ===
+	local SearchBox = Instance.new("TextBox")
+	SearchBox.Size = UDim2.new(0, 200, 0, 24)
+	SearchBox.Position = UDim2.new(0, 15, 0, 230)
+	SearchBox.Text = ""
+	SearchBox.PlaceholderText = "🔍 Tìm kiếm key..."
+	SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+	SearchBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+	SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	SearchBox.BorderSizePixel = 0
+	SearchBox.Font = Enum.Font.Gotham
+	SearchBox.TextSize = 11
+	SearchBox.ClearTextOnFocus = false
+	SearchBox.Parent = ContentFrame
+	Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 5)
+
+	-- === TAB ===
+	local TabFrame = Instance.new("Frame")
+	TabFrame.Size = UDim2.new(0, 220, 0, 22)
+	TabFrame.Position = UDim2.new(1, -235, 0, 231)
+	TabFrame.BackgroundTransparency = 1
+	TabFrame.ZIndex = 5
+	TabFrame.Parent = ContentFrame
+
+	local ActiveTab = Instance.new("TextButton", TabFrame)
+	ActiveTab.Size = UDim2.new(0.48, 0, 1, 0)
+	ActiveTab.Text = "Hoạt động"
+	ActiveTab.Font = Enum.Font.GothamBold
+	ActiveTab.TextSize = 9
+	ActiveTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ActiveTab.BackgroundColor3 = Color3.fromRGB(0, 180, 150)
+	ActiveTab.BorderSizePixel = 0
+	ActiveTab.ZIndex = 5
+	Instance.new("UICorner", ActiveTab).CornerRadius = UDim.new(0, 4)
+
+	local DisabledTab = Instance.new("TextButton", TabFrame)
+	DisabledTab.Size = UDim2.new(0.48, 0, 1, 0)
+	DisabledTab.Position = UDim2.new(0.52, 0, 0, 0)
+	DisabledTab.Text = "Vô hiệu"
+	DisabledTab.Font = Enum.Font.GothamBold
+	DisabledTab.TextSize = 9
+	DisabledTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+	DisabledTab.BackgroundColor3 = Color3.fromRGB(80, 40, 60)
+	DisabledTab.BorderSizePixel = 0
+	DisabledTab.ZIndex = 5
+	Instance.new("UICorner", DisabledTab).CornerRadius = UDim.new(0, 4)
+
+	-- === DANH SÁCH KEY ===
+	local KeyListFrame = Instance.new("ScrollingFrame", ContentFrame)
+	KeyListFrame.Size = UDim2.new(1, -30, 0, 120)
+	KeyListFrame.Position = UDim2.new(0, 15, 0, 260)
+	KeyListFrame.BackgroundColor3 = Color3.fromRGB(16, 16, 22)
+	KeyListFrame.BorderSizePixel = 0
+	KeyListFrame.ZIndex = 4
+	KeyListFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+	KeyListFrame.ScrollBarThickness = 5
+	KeyListFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
+	Instance.new("UICorner", KeyListFrame).CornerRadius = UDim.new(0, 6)
+
+	local UIListLayout = Instance.new("UIListLayout", KeyListFrame)
+	UIListLayout.Padding = UDim.new(0, 3)
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+	local currentView = "active"
+	local searchQuery = ""
+
+	local function RefreshKeyList()
+		for _, child in ipairs(KeyListFrame:GetChildren()) do
+			if child:IsA("Frame") then child:Destroy() end
+		end
+		
+		local keys = {}
+		if currentView == "active" then
+			ActiveTab.BackgroundColor3 = Color3.fromRGB(0, 200, 170)
+			DisabledTab.BackgroundColor3 = Color3.fromRGB(80, 40, 60)
+			local allKeys = GetPermanentKeys()
+			local blacklist = GetBlacklist()
+			for _, k in ipairs(allKeys) do
+				if not blacklist[k.Key] then table.insert(keys, k) end
+			end
+		else
+			ActiveTab.BackgroundColor3 = Color3.fromRGB(60, 40, 60)
+			DisabledTab.BackgroundColor3 = Color3.fromRGB(200, 60, 80)
+			local blacklist = GetBlacklist()
+			for key, data in pairs(blacklist) do
+				table.insert(keys, {Key = key, Duration = "Vô hiệu", CreatedAt = data.DisabledAt, IsBlacklisted = true})
+			end
+		end
+		
+		if searchQuery ~= "" then
+			local filtered = {}
+			for _, k in ipairs(keys) do
+				if string.find(string.lower(k.Key), string.lower(searchQuery)) then table.insert(filtered, k) end
+			end
+			keys = filtered
+		end
+		
+		local totalHeight = 0
+		local count = 0
+		
+		if #keys == 0 then
+			local EmptyText = Instance.new("TextLabel", KeyListFrame)
+			EmptyText.Size = UDim2.new(1, 0, 0, 30)
+			EmptyText.Text = searchQuery ~= "" and "Không tìm thấy: " .. searchQuery or "Chưa có key nào"
+			EmptyText.TextColor3 = Color3.fromRGB(150, 150, 150)
+			EmptyText.Font = Enum.Font.Gotham
+			EmptyText.TextSize = 11
+			EmptyText.BackgroundTransparency = 1
+			totalHeight = 30
+		else
+			for i, keyData in ipairs(keys) do
+				count = count + 1
+				local KeyItem = Instance.new("Frame", KeyListFrame)
+				KeyItem.Size = UDim2.new(1, 0, 0, 35)
+				KeyItem.BackgroundColor3 = (count % 2 == 0) and Color3.fromRGB(20, 20, 26) or Color3.fromRGB(24, 24, 30)
+				KeyItem.BorderSizePixel = 0
+				KeyItem.ZIndex = 4
+				KeyItem.LayoutOrder = count
+				Instance.new("UICorner", KeyItem).CornerRadius = UDim.new(0, 4)
+				
+				local KeyText = Instance.new("TextLabel", KeyItem)
+				KeyText.Size = UDim2.new(1, -85, 0, 16)
+				KeyText.Position = UDim2.new(0, 5, 0, 2)
+				KeyText.Text = (keyData.IsBlacklisted and "🚫 " or "🔑 ") .. keyData.Key
+				KeyText.TextColor3 = keyData.IsBlacklisted and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(0, 255, 200)
+				KeyText.Font = Enum.Font.GothamBold
+				KeyText.TextSize = 8
+				KeyText.BackgroundTransparency = 1
+				KeyText.TextXAlignment = Enum.TextXAlignment.Left
+				KeyText.ZIndex = 5
+				
+				local InfoText = Instance.new("TextLabel", KeyItem)
+				InfoText.Size = UDim2.new(1, -85, 0, 12)
+				InfoText.Position = UDim2.new(0, 5, 0, 18)
+				InfoText.Text = os.date("%d/%m %H:%M", keyData.CreatedAt)
+				InfoText.TextColor3 = Color3.fromRGB(150, 150, 150)
+				InfoText.Font = Enum.Font.Gotham
+				InfoText.TextSize = 7
+				InfoText.BackgroundTransparency = 1
+				InfoText.TextXAlignment = Enum.TextXAlignment.Left
+				InfoText.ZIndex = 5
+				
+				local ActionBtn = Instance.new("TextButton", KeyItem)
+				ActionBtn.Size = UDim2.new(0, 60, 0, 15)
+				ActionBtn.Position = UDim2.new(1, -65, 0, 10)
+				ActionBtn.Font = Enum.Font.Gotham
+				ActionBtn.TextSize = 7
+				ActionBtn.BorderSizePixel = 0
+				ActionBtn.ZIndex = 5
+				Instance.new("UICorner", ActionBtn).CornerRadius = UDim.new(0, 3)
+				
+				if keyData.IsBlacklisted then
+					ActionBtn.Text = "✅ Khôi phục"
+					ActionBtn.TextColor3 = Color3.fromRGB(100, 255, 100)
+					ActionBtn.BackgroundColor3 = Color3.fromRGB(20, 60, 20)
+					ActionBtn.MouseButton1Click:Connect(function()
+						RemoveFromBlacklist(keyData.Key)
+						RefreshKeyList()
+					end)
+				else
+					ActionBtn.Text = "🚫 Vô hiệu"
+					ActionBtn.TextColor3 = Color3.fromRGB(255, 100, 100)
+					ActionBtn.BackgroundColor3 = Color3.fromRGB(60, 20, 20)
+					ActionBtn.MouseButton1Click:Connect(function()
+						AddToBlacklist(keyData.Key)
+						RefreshKeyList()
+					end)
+				end
+				
+				totalHeight = totalHeight + 38
+			end
+		end
+		
+		KeyListFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
+	end
+
+	ActiveTab.MouseButton1Click:Connect(function() currentView = "active" RefreshKeyList() end)
+	DisabledTab.MouseButton1Click:Connect(function() currentView = "disabled" RefreshKeyList() end)
+	SearchBox:GetPropertyChangedSignal("Text"):Connect(function() searchQuery = SearchBox.Text RefreshKeyList() end)
+	RefreshKeyList()
+
+	-- === SOẠN THÔNG BÁO (ADMIN) ===
+	local AnnounceLabel = Instance.new("TextLabel")
+	AnnounceLabel.Size = UDim2.new(1, -30, 0, 16)
+	AnnounceLabel.Position = UDim2.new(0, 15, 0, 388)
+	AnnounceLabel.Text = "📢 SOẠN THÔNG BÁO (ADMIN):"
+	AnnounceLabel.TextColor3 = Color3.fromRGB(255, 200, 50)
+	AnnounceLabel.Font = Enum.Font.GothamBold
+	AnnounceLabel.TextSize = 9
+	AnnounceLabel.TextXAlignment = Enum.TextXAlignment.Left
+	AnnounceLabel.BackgroundTransparency = 1
+	AnnounceLabel.ZIndex = 5
+	AnnounceLabel.Parent = ContentFrame
+
+	local AnnounceBox = Instance.new("TextBox")
+	AnnounceBox.Size = UDim2.new(0, 310, 0, 24)
+	AnnounceBox.Position = UDim2.new(0, 15, 0, 406)
+	AnnounceBox.Text = ""
+	AnnounceBox.PlaceholderText = "Nhập nội dung thông báo..."
+	AnnounceBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+	AnnounceBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+	AnnounceBox.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	AnnounceBox.BorderSizePixel = 0
+	AnnounceBox.Font = Enum.Font.Gotham
+	AnnounceBox.TextSize = 10
+	AnnounceBox.ClearTextOnFocus = false
+	AnnounceBox.Parent = ContentFrame
+	Instance.new("UICorner", AnnounceBox).CornerRadius = UDim.new(0, 5)
+
+	local SendAnnounceBtn = Instance.new("TextButton")
+	SendAnnounceBtn.Size = UDim2.new(0, 160, 0, 24)
+	SendAnnounceBtn.Position = UDim2.new(0, 335, 0, 406)
+	SendAnnounceBtn.Text = "📢 GỬI THÔNG BÁO"
+	SendAnnounceBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	SendAnnounceBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 30)
+	SendAnnounceBtn.BorderSizePixel = 0
+	SendAnnounceBtn.Font = Enum.Font.GothamBold
+	SendAnnounceBtn.TextSize = 9
+	SendAnnounceBtn.AutoButtonColor = false
+	SendAnnounceBtn.ZIndex = 5
+	SendAnnounceBtn.Parent = ContentFrame
+	Instance.new("UICorner", SendAnnounceBtn).CornerRadius = UDim.new(0, 5)
+
+	SendAnnounceBtn.MouseButton1Click:Connect(function()
+		local announceText = AnnounceBox.Text
+		if announceText == "" then
+			game.StarterGui:SetCore("SendNotification", {Title = "❌ Trống"; Text = "Vui lòng nhập nội dung thông báo!"; Duration = 3})
+			return
+		end
+		
+		local PopupGui = Instance.new("ScreenGui", CoreGui)
+		PopupGui.Name = "AnnouncePopup"
+		PopupGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		PopupGui.ResetOnSpawn = false
+		
+		local PopupFrame = Instance.new("Frame", PopupGui)
+		PopupFrame.Size = UDim2.new(0, 350, 0, 200)
+		PopupFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+		PopupFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+		PopupFrame.BorderSizePixel = 0
+		Instance.new("UICorner", PopupFrame).CornerRadius = UDim.new(0, 14)
+		
+		local PopupStroke = Instance.new("UIStroke", PopupFrame)
+		PopupStroke.Thickness = 2
+		PopupStroke.Color = Color3.fromRGB(0, 255, 150)
+		
+		local PopupTitle = Instance.new("TextLabel", PopupFrame)
+		PopupTitle.Size = UDim2.new(1, 0, 0, 35)
+		PopupTitle.Position = UDim2.new(0, 0, 0, 10)
+		PopupTitle.Text = "🎉 THÔNG BÁO 🎉"
+		PopupTitle.TextColor3 = Color3.fromRGB(0, 255, 150)
+		PopupTitle.Font = Enum.Font.GothamBold
+		PopupTitle.TextSize = 18
+		PopupTitle.BackgroundTransparency = 1
+		
+		local PopupContent = Instance.new("TextLabel", PopupFrame)
+		PopupContent.Size = UDim2.new(1, -20, 0, 80)
+		PopupContent.Position = UDim2.new(0, 10, 0, 50)
+		PopupContent.Text = announceText
+		PopupContent.TextColor3 = Color3.fromRGB(255, 255, 255)
+		PopupContent.Font = Enum.Font.Gotham
+		PopupContent.TextSize = 13
+		PopupContent.BackgroundTransparency = 1
+		PopupContent.TextWrapped = true
+		
+		local PopupTimer = Instance.new("TextLabel", PopupFrame)
+		PopupTimer.Size = UDim2.new(1, 0, 0, 25)
+		PopupTimer.Position = UDim2.new(0, 0, 0, 160)
+		PopupTimer.Text = "Tự động tắt sau: 8 giây"
+		PopupTimer.TextColor3 = Color3.fromRGB(255, 150, 50)
+		PopupTimer.Font = Enum.Font.GothamBold
+		PopupTimer.TextSize = 11
+		PopupTimer.BackgroundTransparency = 1
+		
+		local ClosePopupBtn = Instance.new("TextButton", PopupFrame)
+		ClosePopupBtn.Size = UDim2.new(0, 28, 0, 28)
+		ClosePopupBtn.Position = UDim2.new(1, -35, 0, 8)
+		ClosePopupBtn.Text = "X"
+		ClosePopupBtn.TextSize = 14
+		ClosePopupBtn.Font = Enum.Font.GothamBold
+		ClosePopupBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+		ClosePopupBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 34)
+		ClosePopupBtn.BorderSizePixel = 0
+		ClosePopupBtn.ZIndex = 5
+		Instance.new("UICorner", ClosePopupBtn).CornerRadius = UDim.new(0, 5)
+		
+		ClosePopupBtn.MouseButton1Click:Connect(function()
+			PopupGui:Destroy()
+		end)
+		
+		coroutine.wrap(function()
+			for i = 8, 1, -1 do
+				PopupTimer.Text = "Tự động tắt sau: " .. i .. " giây"
+				task.wait(1)
+			end
+			if PopupGui.Parent then PopupGui:Destroy() end
+		end)()
+		
+		SendAnnounceBtn.Text = "✅ ĐÃ GỬI!"
+		SendAnnounceBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 30)
+		
+		game.StarterGui:SetCore("SendNotification", {
+			Title = "📢 Đã hiện thông báo!";
+			Text = "Người dùng đang thấy thông báo này!";
+			Duration = 4;
+		})
+		
+		task.wait(2)
+		SendAnnounceBtn.Text = "📢 GỬI THÔNG BÁO"
+		SendAnnounceBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 30)
+	end)
+
+	-- === KHÓA SCRIPT (CÓ XÁC NHẬN ADMIN RIÊNG) ===
+	local LockLabel = Instance.new("TextLabel")
+	LockLabel.Size = UDim2.new(1, -30, 0, 16)
+	LockLabel.Position = UDim2.new(0, 15, 0, 438)
+	LockLabel.Text = "🔒 KHÓA SCRIPT (ADMIN ONLY):"
+	LockLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+	LockLabel.Font = Enum.Font.GothamBold
+	LockLabel.TextSize = 9
+	LockLabel.TextXAlignment = Enum.TextXAlignment.Left
+	LockLabel.BackgroundTransparency = 1
+	LockLabel.ZIndex = 5
+	LockLabel.Parent = ContentFrame
+
+	-- Ô nhập mật khẩu admin
+	local AdminPassBox = Instance.new("TextBox")
+	AdminPassBox.Size = UDim2.new(0, 180, 0, 24)
+	AdminPassBox.Position = UDim2.new(0, 15, 0, 456)
+	AdminPassBox.Text = ""
+	AdminPassBox.PlaceholderText = "Nhập mật khẩu Admin"
+	AdminPassBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+	AdminPassBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+	AdminPassBox.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+	AdminPassBox.BorderSizePixel = 0
+	AdminPassBox.Font = Enum.Font.Gotham
+	AdminPassBox.TextSize = 10
+	AdminPassBox.ClearTextOnFocus = false
+	AdminPassBox.Parent = ContentFrame
+	Instance.new("UICorner", AdminPassBox).CornerRadius = UDim.new(0, 5)
+
+	-- Nút XÁC NHẬN ADMIN
+	local ConfirmAdminBtn = Instance.new("TextButton")
+	ConfirmAdminBtn.Size = UDim2.new(0, 130, 0, 24)
+	ConfirmAdminBtn.Position = UDim2.new(0, 205, 0, 456)
+	ConfirmAdminBtn.Text = "✅ XÁC NHẬN"
+	ConfirmAdminBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ConfirmAdminBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+	ConfirmAdminBtn.BorderSizePixel = 0
+	ConfirmAdminBtn.Font = Enum.Font.GothamBold
+	ConfirmAdminBtn.TextSize = 10
+	ConfirmAdminBtn.AutoButtonColor = false
+	ConfirmAdminBtn.ZIndex = 5
+	ConfirmAdminBtn.Parent = ContentFrame
+	Instance.new("UICorner", ConfirmAdminBtn).CornerRadius = UDim.new(0, 5)
+
+	-- Trạng thái xác nhận admin
+	local adminConfirmed = false
+
+	-- Nút KHÓA/MỞ KHÓA (ban đầu ẩn)
+	local LockScriptBtn = Instance.new("TextButton")
+	LockScriptBtn.Size = UDim2.new(0, 150, 0, 24)
+	LockScriptBtn.Position = UDim2.new(0, 345, 0, 456)
+	LockScriptBtn.Text = "🔒 KHÓA"
+	LockScriptBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	LockScriptBtn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+	LockScriptBtn.BorderSizePixel = 0
+	LockScriptBtn.Font = Enum.Font.GothamBold
+	LockScriptBtn.TextSize = 10
+	LockScriptBtn.AutoButtonColor = false
+	LockScriptBtn.Visible = false
+	LockScriptBtn.ZIndex = 5
+	LockScriptBtn.Parent = ContentFrame
+	Instance.new("UICorner", LockScriptBtn).CornerRadius = UDim.new(0, 5)
+
+	-- Cập nhật trạng thái nút khóa/mở khóa
+	local maintData = GetMaintenanceStatus()
+	if maintData.Locked then
+		LockScriptBtn.Text = "🔓 MỞ KHÓA"
+		LockScriptBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 30)
+	end
+
+	-- Sự kiện nút XÁC NHẬN
+	ConfirmAdminBtn.MouseButton1Click:Connect(function()
+		local adminPass = AdminPassBox.Text
+		if adminPass == adminKey then
+			adminConfirmed = true
+			LockScriptBtn.Visible = true
+			ConfirmAdminBtn.Text = "✅ ĐÃ XÁC NHẬN"
+			ConfirmAdminBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 30)
+			AdminPassBox.TextColor3 = Color3.fromRGB(0, 255, 150)
+			AdminPassBox.Text = "****"
+			game.StarterGui:SetCore("SendNotification", {Title = "✅ Xác nhận thành công"; Text = "Bạn có thể khóa/mở khóa script!"; Duration = 3})
+		else
+			adminConfirmed = false
+			LockScriptBtn.Visible = false
+			ConfirmAdminBtn.Text = "❌ SAI MẬT KHẨU"
+			ConfirmAdminBtn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+			AdminPassBox.Text = ""
+			task.wait(1.5)
+			ConfirmAdminBtn.Text = "✅ XÁC NHẬN"
+			ConfirmAdminBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+			game.StarterGui:SetCore("SendNotification", {Title = "❌ Sai mật khẩu"; Text = "Chỉ Admin mới có quyền!"; Duration = 3})
+		end
+	end)
+
+	-- Sự kiện nút KHÓA/MỞ KHÓA
+	LockScriptBtn.MouseButton1Click:Connect(function()
+		if not adminConfirmed then
+			game.StarterGui:SetCore("SendNotification", {Title = "❌ Chưa xác nhận"; Text = "Vui lòng xác nhận mật khẩu Admin trước!"; Duration = 3})
+			return
+		end
+		
+		local maintData = GetMaintenanceStatus()
+		if maintData.Locked then
+			SetMaintenanceStatus(false, "Admin")
+			LockScriptBtn.Text = "🔒 KHÓA"
+			LockScriptBtn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+			game.StarterGui:SetCore("SendNotification", {Title = "✅ Đã mở khóa"; Text = "Script đã hoạt động trở lại!"; Duration = 3})
+		else
+			SetMaintenanceStatus(true, "Admin")
+			LockScriptBtn.Text = "🔓 MỞ KHÓA"
+			LockScriptBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 30)
+			game.StarterGui:SetCore("SendNotification", {Title = "🔒 Đã khóa script"; Text = "Script đã bị khóa! Người dùng sẽ thấy thông báo bảo trì."; Duration = 5})
+		end
+	end)
+
+	-- Status bar
+	local StatusBar = Instance.new("TextLabel")
+	StatusBar.Size = UDim2.new(1, -30, 0, 14)
+	StatusBar.Position = UDim2.new(0, 15, 0, 0.97, -14)
+	StatusBar.Text = "🟢 Sẵn sàng | " .. #GetPermanentKeys() .. " key"
+	StatusBar.TextColor3 = Color3.fromRGB(0, 255, 150)
+	StatusBar.Font = Enum.Font.Gotham
+	StatusBar.TextSize = 8
+	StatusBar.BackgroundTransparency = 1
+	StatusBar.TextXAlignment = Enum.TextXAlignment.Left
+	StatusBar.ZIndex = 5
+	StatusBar.Parent = ContentFrame
+
+	local function generateKey(c1, c2, c3)
+		local dv = selectedDuration.Value
+		local dc, dn = "", ""
+		if dv == "24hours" then dc, dn = "24H", "24 Giờ"
+		elseif dv == "7days" then dc, dn = "7D", "7 Ngày"
+		elseif dv == "30days" then dc, dn = "30D", "30 Ngày"
+		elseif dv == "forever" then dc, dn = "FVR", "Vĩnh viễn" end
+		local cs = GenerateChecksum(c1, c2, c3, dv)
+		return c1 .. "-" .. c2 .. "-" .. c3 .. "-" .. dc .. "-" .. cs, dn
+	end
+
+	GenerateBtn.MouseButton1Click:Connect(function()
+		local c1 = C1_Box.Text ~= "" and C1_Box.Text or "KEY"
+		local c2 = C2_Box.Text ~= "" and C2_Box.Text or "GEN"
+		local c3 = C3_Box.Text ~= "" and C3_Box.Text or "DEFAULT"
+		local count = tonumber(CountBox.Text) or 1
+		if count < 1 then count = 1 elseif count > 10000 then count = 10000 end
+		
+		local generatedCount = 0
+		local lastKey = ""
+		
+		for i = 1, count do
+			local uniqueC3 = count > 1 and (c3 .. "-" .. tostring(i)) or c3
+			local newKey, durationName = generateKey(c1, c2, uniqueC3)
+			SavePermanentKey({Key = newKey, Duration = durationName, DurationValue = selectedDuration.Value, CreatedAt = os.time(), CreatedBy = "KeyGenerator"})
+			lastKey = newKey
+			generatedCount = generatedCount + 1
+		end
+		
+		KeyOutput.Text = count == 1 and lastKey or ("✅ Đã tạo " .. count .. " key!")
+		KeyOutput.TextColor3 = Color3.fromRGB(0, 255, 200)
+		
+		TweenService:Create(GenerateBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+		task.wait(0.1)
+		TweenService:Create(GenerateBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(0, 255, 180)}):Play()
+		
+		StatusBar.Text = "✅ Đã tạo " .. generatedCount .. " key! | " .. #GetPermanentKeys() .. " key"
+		RefreshKeyList()
+		task.wait(2)
+		StatusBar.Text = "🟢 Sẵn sàng | " .. #GetPermanentKeys() .. " key"
+	end)
+
+	RunService.RenderStepped:Connect(function(dt)
+		if not ContentFrame.Parent then return end
+		RainbowInlay.UIGradient.Rotation = (RainbowInlay.UIGradient.Rotation + (110 * dt)) % 360
+	end)
+
+	TweenService:Create(BaseHolder, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Size = FinalSize}):Play()
+
+	local dragging2, dragInput2, dragStart2, startPos2
+	local function update(input)
+		local delta = input.Position - dragStart2
+		BaseHolder.Position = UDim2.new(startPos2.X.Scale, startPos2.X.Offset + delta.X, startPos2.Y.Scale, startPos2.Y.Offset + delta.Y)
+	end
+	BaseHolder.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging2 = true
+			dragStart2 = input.Position
+			startPos2 = BaseHolder.Position
+			input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging2 = false end end)
+		end
+	end)
+	BaseHolder.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput2 = input end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput2 and dragging2 then update(input) end
+	end)
+
+	CloseGenBtn.MouseButton1Click:Connect(function()
+		local closeTween = TweenService:Create(BaseHolder, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)})
+		closeTween:Play()
+		closeTween.Completed:Connect(function() GenMenu:Destroy() end)
+	end)
+end
+
+-- =============================================
+-- MENU THIÊN HÀ 3D
+-- =============================================
+local function CreateRainbowMenu()
+	local currentKey = GetDailyKey()
+	local isWaiting, waitEndTime = false, 0
+
+	local CoreMenu = Instance.new("ScreenGui")
+	CoreMenu.Name = "BloxFruits_GodTier_Menu"
+	CoreMenu.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	pcall(function() CoreMenu.Parent = CoreGui end)
+	if not CoreMenu.Parent then CoreMenu.Parent = LocalPlayer:WaitForChild("PlayerGui") end
+
+	local AmbientBackground = Instance.new("Frame")
+	AmbientBackground.Size = UDim2.new(1, 0, 1, 0)
+	AmbientBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	AmbientBackground.BackgroundTransparency = 1
+	AmbientBackground.BorderSizePixel = 0
+	AmbientBackground.Parent = CoreMenu
+
+	local BaseHolder = Instance.new("Frame")
+	local FinalSize = UDim2.new(0, 440, 0, 470)
+	BaseHolder.Name = "BaseHolder"
+	BaseHolder.Size = UDim2.new(0, 0, 0, 0)
+	BaseHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
+	BaseHolder.AnchorPoint = Vector2.new(0.5, 0.5)
+	BaseHolder.BackgroundTransparency = 1
+	BaseHolder.Active = true
+	BaseHolder.Parent = AmbientBackground
+
+	for _, layer in ipairs({{12, 0.55, 16}, {24, 0.75, 22}, {36, 0.90, 28}}) do
+		local Shadow = Instance.new("Frame")
+		Shadow.Size = UDim2.new(1, layer[1], 1, layer[1])
+		Shadow.Position = UDim2.new(0.5, 0, 0.5, 5)
+		Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+		Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		Shadow.BackgroundTransparency = layer[2]
+		Shadow.BorderSizePixel = 0
+		Shadow.ZIndex = 1
+		Instance.new("UICorner", Shadow).CornerRadius = UDim.new(0, layer[3])
+		Shadow.Parent = BaseHolder
+	end
+
+	local MainContainer = Instance.new("Frame")
+	MainContainer.Size = UDim2.new(1, 0, 1, 0)
+	MainContainer.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+	MainContainer.BorderSizePixel = 0
+	MainContainer.ZIndex = 2
+	MainContainer.Parent = BaseHolder
+	Instance.new("UICorner", MainContainer).CornerRadius = UDim.new(0, 14)
+
+	local RainbowInlay = Instance.new("Frame")
+	RainbowInlay.Size = UDim2.new(1, -6, 1, -6)
+	RainbowInlay.Position = UDim2.new(0.5, 0, 0.5, 0)
+	RainbowInlay.AnchorPoint = Vector2.new(0.5, 0.5)
+	RainbowInlay.BorderSizePixel = 0
+	RainbowInlay.ZIndex = 3
+	RainbowInlay.Parent = MainContainer
+	Instance.new("UICorner", RainbowInlay).CornerRadius = UDim.new(0, 12)
+
+	local RainbowGradient = Instance.new("UIGradient")
+	RainbowGradient.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+		ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 110, 0)),
+		ColorSequenceKeypoint.new(0.32, Color3.fromRGB(255, 230, 0)),
+		ColorSequenceKeypoint.new(0.48, Color3.fromRGB(0, 255, 120)),
+		ColorSequenceKeypoint.new(0.64, Color3.fromRGB(0, 220, 255)),
+		ColorSequenceKeypoint.new(0.8, Color3.fromRGB(70, 70, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 0, 255))
+	}
+	RainbowGradient.Parent = RainbowInlay
+
+	local ContentFrame = Instance.new("Frame")
+	ContentFrame.Size = UDim2.new(1, -6, 1, -6)
+	ContentFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+	ContentFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	ContentFrame.BorderSizePixel = 0
+	ContentFrame.ZIndex = 4
+	ContentFrame.ClipsDescendants = true
+	ContentFrame.Parent = RainbowInlay
+	Instance.new("UICorner", ContentFrame).CornerRadius = UDim.new(0, 10)
+	Instance.new("UIGradient", ContentFrame).Color = ColorSequence.new(Color3.fromRGB(26,26,30), Color3.fromRGB(12,12,14))
+
+	local GalaxyContainer = Instance.new("Frame")
+	GalaxyContainer.Size = UDim2.new(1, 0, 1, 0)
+	GalaxyContainer.BackgroundTransparency = 1
+	GalaxyContainer.ZIndex = 5
+	GalaxyContainer.ClipsDescendants = true
+	GalaxyContainer.Parent = ContentFrame
+
+	local galaxyStars = {}
+	for i = 1, 150 do
+		local Star = Instance.new("Frame")
+		local size = math.random(1, 3)
+		Star.Size = UDim2.new(0, size, 0, size)
+		Star.Position = UDim2.new(math.random() * 0.96 + 0.02, 0, math.random() * 0.96 + 0.02, 0)
+		Star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Star.BorderSizePixel = 0
+		Star.BackgroundTransparency = 0.3 + math.random() * 0.5
+		Star.ZIndex = 6
+		Instance.new("UICorner", Star).CornerRadius = UDim.new(1, 0)
+		Star.Parent = GalaxyContainer
+		table.insert(galaxyStars, {Object = Star, Speed = 0.1 + math.random() * 0.3, Phase = math.random() * 100, Size = size})
+	end
+
+	local GlossOverlay = Instance.new("Frame")
+	GlossOverlay.Size = UDim2.new(1, 0, 0.38, 0)
+	GlossOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	GlossOverlay.BorderSizePixel = 0
+	GlossOverlay.ZIndex = 9
+	GlossOverlay.Parent = ContentFrame
+	local GlossGradient = Instance.new("UIGradient")
+	GlossGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0.95), NumberSequenceKeypoint.new(1, 1.00)}
+	GlossGradient.Rotation = 90
+	GlossGradient.Parent = GlossOverlay
+
+	local Title = Instance.new("TextLabel")
+	Title.Size = UDim2.new(1, 0, 0, 40)
+	Title.Position = UDim2.new(0, 0, 0, 15)
+	Title.Text = "🔑 LẤY KEY HÔM NAY 🔑"
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextSize = 20
+	Title.Font = Enum.Font.GothamBold
+	Title.BackgroundTransparency = 1
+	Title.ZIndex = 10
+	Title.Parent = ContentFrame
+	local TitleGlow = Instance.new("UIStroke")
+	TitleGlow.Color = Color3.fromRGB(0, 220, 255)
+	TitleGlow.Transparency = 0.5
+	TitleGlow.Parent = Title
+
+	local InfoFrame = Instance.new("Frame")
+	InfoFrame.Size = UDim2.new(0.85, 0, 0, 90)
+	InfoFrame.Position = UDim2.new(0.075, 0, 0, 60)
+	InfoFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+	InfoFrame.BorderSizePixel = 0
+	InfoFrame.ZIndex = 8
+	InfoFrame.Parent = ContentFrame
+	Instance.new("UICorner", InfoFrame).CornerRadius = UDim.new(0, 10)
+
+	local RateText = Instance.new("TextLabel")
+	RateText.Size = UDim2.new(1, 0, 1, 0)
+	RateText.Text = "🎲 TỈ LỆ THỜI GIAN CHỜ:\n🟢 25% → 1 phút\n🟡 35% → 2 phút\n🔴 50% → 5 phút\n✅ 100% nhận key sau khi chờ!\n💬 " .. keyLink
+	RateText.TextColor3 = Color3.fromRGB(200, 200, 200)
+	RateText.TextSize = 11
+	RateText.Font = Enum.Font.SourceSansBold
+	RateText.BackgroundTransparency = 1
+	RateText.ZIndex = 9
+	RateText.TextXAlignment = Enum.TextXAlignment.Left
+	RateText.Parent = InfoFrame
+
+	local GetKeyNowButton = Instance.new("TextButton")
+	GetKeyNowButton.Size = UDim2.new(0.85, 0, 0, 44)
+	GetKeyNowButton.Position = UDim2.new(0.075, 0, 0, 162)
+	GetKeyNowButton.Text = "🎁 LẤY KEY NGAY"
+	GetKeyNowButton.Font = Enum.Font.GothamBold
+	GetKeyNowButton.TextSize = 16
+	GetKeyNowButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	GetKeyNowButton.BackgroundColor3 = Color3.fromRGB(0, 180, 100)
+	GetKeyNowButton.BorderSizePixel = 0
+	GetKeyNowButton.ZIndex = 8
+	GetKeyNowButton.Parent = ContentFrame
+	Instance.new("UICorner", GetKeyNowButton).CornerRadius = UDim.new(0, 10)
+
+	local StatusFrame = Instance.new("Frame")
+	StatusFrame.Size = UDim2.new(0.85, 0, 0, 80)
+	StatusFrame.Position = UDim2.new(0.075, 0, 0, 218)
+	StatusFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+	StatusFrame.BorderSizePixel = 0
+	StatusFrame.ZIndex = 8
+	StatusFrame.Visible = false
+	StatusFrame.Parent = ContentFrame
+	Instance.new("UICorner", StatusFrame).CornerRadius = UDim.new(0, 10)
+
+	local StatusText = Instance.new("TextLabel")
+	StatusText.Size = UDim2.new(1, 0, 0, 30)
+	StatusText.Position = UDim2.new(0, 0, 0, 8)
+	StatusText.Text = "⏳ ĐANG CHỜ..."
+	StatusText.TextColor3 = Color3.fromRGB(255, 200, 50)
+	StatusText.TextSize = 16
+	StatusText.Font = Enum.Font.GothamBold
+	StatusText.BackgroundTransparency = 1
+	StatusText.ZIndex = 9
+	StatusText.Parent = StatusFrame
+
+	local TimerText = Instance.new("TextLabel")
+	TimerText.Size = UDim2.new(1, 0, 0, 25)
+	TimerText.Position = UDim2.new(0, 0, 0, 45)
+	TimerText.Text = "Còn lại: --:--"
+	TimerText.TextColor3 = Color3.fromRGB(255, 150, 50)
+	TimerText.TextSize = 18
+	TimerText.Font = Enum.Font.GothamBold
+	TimerText.BackgroundTransparency = 1
+	TimerText.ZIndex = 9
+	TimerText.Parent = StatusFrame
+
+	local KeyFrame = Instance.new("Frame")
+	KeyFrame.Size = UDim2.new(0.85, 0, 0, 70)
+	KeyFrame.Position = UDim2.new(0.075, 0, 0, 218)
+	KeyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+	KeyFrame.BorderSizePixel = 0
+	KeyFrame.ZIndex = 8
+	KeyFrame.Visible = false
+	KeyFrame.Parent = ContentFrame
+	Instance.new("UICorner", KeyFrame).CornerRadius = UDim.new(0, 10)
+	Instance.new("UIStroke", KeyFrame).Color = Color3.fromRGB(0, 255, 200)
+
+	local KeyText = Instance.new("TextLabel")
+	KeyText.Size = UDim2.new(1, 0, 1, -22)
+	KeyText.Position = UDim2.new(0, 0, 0, 5)
+	KeyText.Text = ""
+	KeyText.TextColor3 = Color3.fromRGB(0, 255, 200)
+	KeyText.TextSize = 16
+	KeyText.Font = Enum.Font.GothamBold
+	KeyText.BackgroundTransparency = 1
+	KeyText.ZIndex = 9
+	KeyText.Parent = KeyFrame
+
+	local TimeLeftText = Instance.new("TextLabel")
+	TimeLeftText.Size = UDim2.new(1, 0, 0, 18)
+	TimeLeftText.Position = UDim2.new(0, 0, 0.75, 0)
+	TimeLeftText.Text = ""
+	TimeLeftText.TextColor3 = Color3.fromRGB(255, 200, 100)
+	TimeLeftText.TextSize = 10
+	TimeLeftText.Font = Enum.Font.SourceSansBold
+	TimeLeftText.BackgroundTransparency = 1
+	TimeLeftText.ZIndex = 9
+	TimeLeftText.Parent = KeyFrame
+
+	local CopyButton = Instance.new("TextButton")
+	CopyButton.Size = UDim2.new(0.85, 0, 0, 34)
+	CopyButton.Position = UDim2.new(0.075, 0, 0, 302)
+	CopyButton.Text = "📋 COPY KEY"
+	CopyButton.Font = Enum.Font.GothamBold
+	CopyButton.TextSize = 13
+	CopyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	CopyButton.BackgroundColor3 = Color3.fromRGB(0, 180, 150)
+	CopyButton.BorderSizePixel = 0
+	CopyButton.ZIndex = 8
+	CopyButton.Visible = false
+	CopyButton.Parent = ContentFrame
+	Instance.new("UICorner", CopyButton).CornerRadius = UDim.new(0, 8)
+
+	local CancelButton = Instance.new("TextButton")
+	CancelButton.Size = UDim2.new(0.85, 0, 0, 30)
+	CancelButton.Position = UDim2.new(0.075, 0, 0, 308)
+	CancelButton.Text = "❌ HỦY CHỜ"
+	CancelButton.Font = Enum.Font.GothamBold
+	CancelButton.TextSize = 12
+	CancelButton.TextColor3 = Color3.fromRGB(255, 100, 100)
+	CancelButton.BackgroundColor3 = Color3.fromRGB(40, 20, 20)
+	CancelButton.BorderSizePixel = 0
+	CancelButton.ZIndex = 8
+	CancelButton.Visible = false
+	CancelButton.Parent = ContentFrame
+	Instance.new("UICorner", CancelButton).CornerRadius = UDim.new(0, 8)
+
+	local CloseMenuButton = Instance.new("TextButton")
+	CloseMenuButton.Size = UDim2.new(0, 28, 0, 28)
+	CloseMenuButton.Position = UDim2.new(1, -40, 0, 15)
+	CloseMenuButton.Text = "X"
+	CloseMenuButton.TextSize = 14
+	CloseMenuButton.Font = Enum.Font.GothamBold
+	CloseMenuButton.TextColor3 = Color3.fromRGB(255, 80, 80)
+	CloseMenuButton.BackgroundColor3 = Color3.fromRGB(30, 30, 34)
+	CloseMenuButton.BorderSizePixel = 0
+	CloseMenuButton.ZIndex = 10
+	CloseMenuButton.Parent = ContentFrame
+	Instance.new("UICorner", CloseMenuButton).CornerRadius = UDim.new(0, 6)
+
+	local function StartKeyWait()
+		if isWaiting then return end
+		local rand = math.random(1, 100)
+		local waitTime = rand <= 25 and 60 or rand <= 60 and 120 or 300
+		isWaiting = true
+		waitEndTime = os.time() + waitTime
+		GetKeyNowButton.Visible = false
+		KeyFrame.Visible = false
+		CopyButton.Visible = false
+		StatusFrame.Visible = true
+		CancelButton.Visible = true
+		StatusText.Text = "⏳ ĐANG CHỜ " .. math.floor(waitTime / 60) .. " PHÚT"
+		coroutine.wrap(function()
+			while isWaiting and ContentFrame.Parent do
+				local remaining = waitEndTime - os.time()
+				if remaining <= 0 then
+					isWaiting = false
+					StatusFrame.Visible = false
+					CancelButton.Visible = false
+					KeyFrame.Visible = true
+					CopyButton.Visible = true
+					GetKeyNowButton.Visible = true
+					GetKeyNowButton.Text = "🔄 LẤY KEY KHÁC"
+					KeyText.Text = currentKey
+					TimeLeftText.Text = "⏳ Key đổi sau: " .. math.floor((86400 - (os.time() % 86400)) / 3600) .. "h"
+					break
+				end
+				TimerText.Text = "Còn lại: " .. math.floor(remaining / 60) .. ":" .. string.format("%02d", remaining % 60)
+				task.wait(1)
+			end
+		end)()
+	end
+
+	GetKeyNowButton.MouseButton1Click:Connect(StartKeyWait)
+	CancelButton.MouseButton1Click:Connect(function()
+		if not isWaiting then return end
+		isWaiting = false
+		StatusFrame.Visible = false
+		CancelButton.Visible = false
+		GetKeyNowButton.Visible = true
+		GetKeyNowButton.Text = "🎁 LẤY KEY NGAY"
+	end)
+	CopyButton.MouseButton1Click:Connect(function() setclipboard(currentKey) end)
+
+	RunService.RenderStepped:Connect(function(deltaTime)
+		if not ContentFrame.Parent then return end
+		RainbowInlay.UIGradient.Rotation = (RainbowInlay.UIGradient.Rotation + (110 * deltaTime)) % 360
+		TitleGlow.Thickness = (math.sin(tick() * 3) + 1) * 1.2
+		for _, star in ipairs(galaxyStars) do
+			star.Object.BackgroundTransparency = 1 - (0.3 + (math.sin(tick() * star.Speed + star.Phase) + 1) * 0.35)
+		end
+	end)
+
+	BaseHolder.Size = UDim2.new(0, 0, 0, 0)
+	TweenService:Create(BaseHolder, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = FinalSize}):Play()
+
+	local dragging2, dragInput2, dragStart2, startPos2
+	local function update(input)
+		local delta = input.Position - dragStart2
+		BaseHolder.Position = UDim2.new(startPos2.X.Scale, startPos2.X.Offset + delta.X, startPos2.Y.Scale, startPos2.Y.Offset + delta.Y)
+	end
+	BaseHolder.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging2 = true
+			dragStart2 = input.Position
+			startPos2 = BaseHolder.Position
+			input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging2 = false end end)
+		end
+	end)
+	BaseHolder.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput2 = input end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput2 and dragging2 then update(input) end
+	end)
+
+	CloseMenuButton.MouseButton1Click:Connect(function()
+		local closeTween = TweenService:Create(BaseHolder, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)})
+		closeTween:Play()
+		closeTween.Completed:Connect(function() CoreMenu:Destroy() end)
+	end)
+end
+
+-- =============================================
+-- SỰ KIỆN NÚT
+-- =============================================
+LogoButton.MouseButton1Click:Connect(function()
+	if keyOk then
+		CreateKeyGenerator()
+	else
+		CreateRainbowMenu()
+	end
+end)
+GetKeyButton.MouseButton1Click:Connect(CreateRainbowMenu)
+
+CheckButton.MouseButton1Click:Connect(function()
+	if isProcessing then return end
+	isProcessing = true
+	local inputKey = TextBox.Text
+	if inputKey == adminKey then
+		keyOk = true
+		isAdmin = true
+		-- Đổi màu viền thành xanh để biết đã đăng nhập
+		MenuStroke.Color = Color3.fromRGB(0, 255, 150)
+		-- Đổi text input thành thông báo
+		TitleInput.Text = "✅ ĐÃ ĐĂNG NHẬP"
+		TitleInput.TextColor3 = Color3.fromRGB(0, 255, 150)
+		TextBox.Text = "ADMIN"
+		TextBox.TextColor3 = Color3.fromRGB(0, 255, 150)
+		KeyDisplay.Text = "👑 ADMIN - Bấm Logo để vào Generator"
+		KeyDisplay.TextColor3 = Color3.fromRGB(0, 255, 150)
+		game.StarterGui:SetCore("SendNotification", {Title = "XIN CHÀO ADMIN 👑"; Text = "Bấm Logo LONG REDZ để mở Key Generator!"; Duration = 4})
+	else
+		keyOk = false
+		-- Rung menu khi sai key
+		local origPos = Frame.Position
+		for i = 1, 3 do
+			TweenService:Create(Frame, TweenInfo.new(0.05), {Position = UDim2.new(origPos.X.Scale, origPos.X.Offset + 5, origPos.Y.Scale, origPos.Y.Offset)}):Play()
+			task.wait(0.05)
+			TweenService:Create(Frame, TweenInfo.new(0.05), {Position = UDim2.new(origPos.X.Scale, origPos.X.Offset - 5, origPos.Y.Scale, origPos.Y.Offset)}):Play()
+			task.wait(0.05)
+		end
+		TweenService:Create(Frame, TweenInfo.new(0.05), {Position = origPos}):Play()
+		TextBox.Text = ""
+		game.StarterGui:SetCore("SendNotification", {Title = "Sai key ❌"; Text = "Key không hợp lệ! Mua key: " .. keyLink; Duration = 3})
+	end
+	task.wait(0.5)
+	isProcessing = false
+end)
